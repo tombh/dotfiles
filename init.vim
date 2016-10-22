@@ -11,9 +11,6 @@ call plug#begin('~/.vim/plugged')
   " Dark vim colour theme
   Plug 'mhartington/oceanic-next'
 
-  " ??
-  Plug 'freeo/vim-kalisi'
-
   " Show added/deleted/modifed symbols next to lines
   Plug 'airblade/vim-gitgutter'
   " Lots of git shortcuts
@@ -21,8 +18,8 @@ call plug#begin('~/.vim/plugged')
 
   " Comprehensive lint highlighter
   Plug 'scrooloose/syntastic'
-
   " Just some nice functions to comment code quickly
+
   Plug 'scrooloose/nerdcommenter'
 
   " Highlight bad whitespace in code
@@ -50,7 +47,7 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_loc_list_height = 2
 
-" ?
+" CTRL+N in spell mode will autocomplete the word
 set complete+=kspell
 
 " Make sure insert mode is the default mode when opening/switching to files
@@ -75,7 +72,7 @@ inoremap <C-P> <C-O>:CtrlP<CR>
 " Better spelling suggestions shortcut
 inoremap <C-G> <C-X>s
 
-" undo/redo
+" Undo/redo
 inoremap <C-U> <C-O>u
 inoremap <C-R> <C-O><C-R>
 
@@ -88,26 +85,28 @@ inoremap <C-K> <C-O>dd
 " CTRL+d duplicates current line
 inoremap <C-D> <C-O>yy<C-O>p
 
-" make arrow keys move through wrapped lines
+" Make arrow keys move through wrapped lines
 inoremap <Up> <C-O>gk
 inoremap <Down> <C-O>gj
 
-inoremap <Esc><Up> <C-O>:m-1<CR>
+" Alt+up/down moves the current line
 inoremap <Esc><Down> <C-O>:m +1<CR>
+inoremap <Esc><Up> <C-O>:m -2<CR>
 
-inoremap <Esc>h hi
-y
+" Home goes back to the first non-whitespace character of the line
+inoremap <Home> <C-O>^
+
 " CTRL+_ (and CTRL+/ on my machine at least) toggles comments
 inoremap <C-_> <C-O>:call NERDComment('n', 'toggle')<CR>
 
-" tab settings like ruby likes
+" Tab settings ruby style
 set tabstop=2 shiftwidth=2 expandtab
 
 " Show whitespace
 :set list 
 :set listchars=tab:>>,trail:·,nbsp:*
 
-" allow text to wrap in text files
+" Allow text to wrap in text files
 au BufNewFile,BufRead *.txt,*.md,*.markdown setlocal linebreak spell
 
 " Existing useful commands
@@ -121,3 +120,7 @@ augroup source_vimrc
   autocmd! bufwritepost init.vim source %
 augroup END
 set autoread " Set to auto read when a file is changed from the outside
+
+" TODO:
+" * Scroll 1 wrapped soft line at a time rather an entire block of wrapped
+"   lines
