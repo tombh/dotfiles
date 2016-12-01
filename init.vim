@@ -28,17 +28,19 @@ call plug#begin('~/.vim/plugged')
   " Move the cursor to the last known place when openining a file
   Plug 'dietsche/vim-lastplace'
 
+  " Autoformat code
+  Plug 'Chiel92/vim-autoformat'
+
 " Add plugins to &runtimepath
 call plug#end()
 
 " Theme
-set background=dark
-let g:airline_theme='oceanicnext'
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+set termguicolors
 colorscheme OceanicNext
+let g:airline_theme = 'oceanicnext'
 
 " Force powerline fonts
-let g:airline_powerline_fonts=1
+let g:airline_powerline_fonts = 1
 
 " Recommended defaults
 let g:syntastic_always_populate_loc_list = 1
@@ -46,6 +48,16 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_loc_list_height = 2
+
+" CtrlP setup
+let g:ctrlp_show_hidden = 1
+" Default to opening filess in a new tab when pressing ENTER
+" To place the file in the currernt buffer use CTRL+B
+let g:ctrlp_prompt_mappings = {
+  \'AcceptSelection("e")': ['<c-b>'],
+  \'AcceptSelection("t")': ['<cr>']
+\}
+let g:ctrlp_open_new_file = 't'
 
 " CTRL+N in spell mode will autocomplete the word
 set complete+=kspell
@@ -98,6 +110,10 @@ inoremap <Home> <C-O>^
 
 " CTRL+_ (and CTRL+/ on my machine at least) toggles comments
 inoremap <C-_> <C-O>:call NERDComment('n', 'toggle')<CR>
+
+" Tab actions
+nnoremap [ :tabprevious<CR>
+nnoremap ] :tabnext<CR>
 
 " Tab settings ruby style
 set tabstop=2 shiftwidth=2 expandtab
