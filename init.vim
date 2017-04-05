@@ -41,6 +41,20 @@ Plug 'kchmck/vim-coffee-script'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 
+" :Rg command to search the whole project for string or pattern
+Plug 'jremmen/vim-ripgrep'
+
+" Asynchronous whilst-you-type autocompletion
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+
+" Use tab for lots of things, mainly autocompleting
+Plug 'ervandew/supertab'
+
+" Ultisnips snippet engine.
+Plug 'SirVer/ultisnips'
+" Snippets are separate from the actual ultisnips engine
+Plug 'honza/vim-snippets'
+
 " Add plugins to &runtimepath
 call plug#end()
 
@@ -63,17 +77,25 @@ let g:neomake_open_list=2
 let g:neomake_list_height=5
 let g:neomake_verbose=3
 
+" Not sure this is really needed
+let g:neomake_javascript_enabled_makers = ['eslint']
+
+" Deoplete autocompletion
+let g:deoplete#enable_at_startup = 1
+
+" Make use of ripgrep for file searching
+if executable("rg")
+  let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+  let g:ctrlp_use_caching = 0
+endif
+
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\.git$\|vendor\|node_modules\|public\/images\|public\/system\|data\|log\|tmp$',
   \ 'file': '\.exe$\|\.so$\|\.dat\|\.bin\|\.o$'
   \ }
 
-" Check *.h files
-let g:syntastic_cpp_check_header = 1
-" Filter out errors from included files
-let g:syntastic_cpp_remove_include_errors = 1
-
 " CtrlP setup
+" Sgow hidden files
 let g:ctrlp_show_hidden = 1
 " Default to opening filess in a new tab when pressing ENTER
 " To place the file in the currernt buffer use CTRL+B
@@ -81,8 +103,10 @@ let g:ctrlp_prompt_mappings = {
       \'AcceptSelection("e")': ['<c-b>'],
       \'AcceptSelection("t")': ['<cr>']
       \}
+" Open new files in a tab
 let g:ctrlp_open_new_file = 't'
 
+" CTRL+J fucntion finding
 let g:ctrlp_funky_matchtype = 'path'
 let g:ctrlp_funky_syntax_highlight = 1
 
@@ -161,7 +185,7 @@ vnoremap <C-_> :call NERDComment('n', 'toggle')<CR><Esc>i
 
 " Tab actions
 inoremap <M-Tab> <C-O>:tabnext<CR>
-"inoremap <M-S-Tab> <C-O>:tabprevious<CR>
+inoremap <M-S-Tab> <C-O>:tabprevious<CR>
 
 " Tab settings ruby style
 set tabstop=2 shiftwidth=2 expandtab

@@ -7,7 +7,7 @@ zplug "plugins/git", from:oh-my-zsh
 zplug "themes/steeef", from:oh-my-zsh, as:theme
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-history-substring-search"
-zplug "zsh-users/zsh-syntax-highlighting", nice:-10
+zplug "zsh-users/zsh-syntax-highlighting", defer:3
 # cd into most frequently/recently used paths
 zplug "rupa/z", as:plugin, use:z.sh
 
@@ -44,6 +44,7 @@ export ZLS_COLORS=$LS_COLORS
 
 zplug load
 
+prompt bart
 
 # Ensure Home/End do what their meant to
 bindkey "${terminfo[khome]}" beginning-of-line
@@ -53,6 +54,7 @@ bindkey "${terminfo[kend]}" end-of-line
 bindkey "^[[A" history-substring-search-up
 bindkey "^[[B" history-substring-search-down
 
+export XDG_CONFIG_HOME=$HOME/.config
 export EDITOR=nvim
 
 alias 'gs'='git status'
@@ -74,6 +76,8 @@ source $HOME/.cargo/env
 # added by travis gem
 [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
 
-
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+PATH=$PATH:./node_modules/.bin
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
