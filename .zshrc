@@ -44,8 +44,6 @@ export ZLS_COLORS=$LS_COLORS
 
 zplug load
 
-prompt bart
-
 # Ensure Home/End do what their meant to
 bindkey "${terminfo[khome]}" beginning-of-line
 bindkey "${terminfo[kend]}" end-of-line
