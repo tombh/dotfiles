@@ -55,6 +55,12 @@ Plug 'SirVer/ultisnips'
 " Snippets are separate from the actual ultisnips engine
 Plug 'honza/vim-snippets'
 
+" CSS and SASS syntax
+Plug 'hail2u/vim-css3-syntax'
+
+" Tree view of files
+Plug 'scrooloose/nerdtree'
+
 " Add plugins to &runtimepath
 call plug#end()
 
