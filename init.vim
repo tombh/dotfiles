@@ -18,6 +18,9 @@ Plug 'airblade/vim-gitgutter'
 " Lots of git shortcuts
 Plug 'tpope/vim-fugitive'
 
+" Lazy loading support for squillions of languages
+Plug 'sheerun/vim-polyglot'
+
 " Asynchronous linter
 Plug 'neomake/neomake'
 
@@ -33,19 +36,11 @@ Plug 'dietsche/vim-lastplace'
 " Autoformat code
 Plug 'Chiel92/vim-autoformat'
 
-" Syntax highlighting for OpenCL *.cl files
-Plug 'brgmnn/vim-opencl'
-
-" JS stuff
-Plug 'kchmck/vim-coffee-script'
-Plug 'pangloss/vim-javascript'
-Plug 'mxw/vim-jsx'
-
 " :Rg command to search the whole project for string or pattern
 Plug 'jremmen/vim-ripgrep'
 
-" Asynchronous whilst-you-type autocompletion
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" Asynchronous autocompletion, like deoplete, but not
+"Plug 'roxma/nvim-completion-manager'
 
 " Use tab for lots of things, mainly autocompleting
 Plug 'ervandew/supertab'
@@ -55,11 +50,12 @@ Plug 'SirVer/ultisnips'
 " Snippets are separate from the actual ultisnips engine
 Plug 'honza/vim-snippets'
 
-" CSS and SASS syntax
-Plug 'hail2u/vim-css3-syntax'
-
 " Tree view of files
 Plug 'scrooloose/nerdtree'
+
+" Mainly so that autoread triggers. So I know when changes to a
+" file are made outside the editor.
+Plug 'tmux-plugins/vim-tmux-focus-events'
 
 " Add plugins to &runtimepath
 call plug#end()
@@ -86,8 +82,8 @@ let g:neomake_verbose=3
 " Not sure this is really needed
 let g:neomake_javascript_enabled_makers = ['eslint']
 
-" Deoplete autocompletion
-let g:deoplete#enable_at_startup = 1
+" Autocompletion
+let g:cm_auto_popup = 0
 
 " Make use of ripgrep for file searching
 if executable("rg")
@@ -119,21 +115,21 @@ let g:ctrlp_funky_syntax_highlight = 1
 " Highlight JSX in normal files
 let g:jsx_ext_required = 0
 
-" CTRL+N in spell mode will autocomplete the word
-set complete+=kspell
-
 " Make sure insert mode is the default mode when opening/switching to files
 au BufWinEnter * set insertmode
 
 " Prompt when the file changes on disk
 au CursorHold * checktime
 
-" This is a bit hacky because "(insert) VISUAL" mode has a 3ish second delay
-" when leaving :( So we need to go to NORMAL mode then VISUAL mode then back
-" to INSERT mode.
-inoremap <C-V> <Esc>v
+" Copy and paste stuff
+inoremap <S-Left> <Esc><Right>v<Left>
+inoremap <S-Right> <Esc><Right>v<Right>
+inoremap <S-Up> <Esc><Right>v<Up>
+inoremap <S-Down> <Esc><Right>v<Down>
+inoremap <C-V> <Esc>pi<Right>
 vnoremap <C-C> y<Esc>i
 vnoremap <C-X> d<Esc>i
+
 " The `gv` returns you to the exact same selection, so you can repeat the
 " command
 vnoremap <Tab> ><Esc>gv
@@ -156,14 +152,12 @@ inoremap <F3> <C-O>n
 inoremap <C-P> <C-O>:CtrlP<CR>
 " Shortcut for choosing between open files in buffer
 inoremap <C-B> <C-O>:CtrlPBuffer<CR>
+
 " Always show tabs even if there is only one file open
 set showtabline=2
 
 " Shortcut for CtrlPFunky symbol lookup
 inoremap <C-J> <C-O>:CtrlPFunky<CR>
-
-" Better spelling suggestions shortcut
-inoremap <C-G> <C-X>s
 
 " Undo/redo
 inoremap <C-U> <C-O>u
@@ -191,7 +185,7 @@ vnoremap <C-_> :call NERDComment('n', 'toggle')<CR><Esc>i
 
 " Tab actions
 inoremap <M-Tab> <C-O>:tabnext<CR>
-inoremap <M-S-Tab> <C-O>:tabprevious<CR>
+inoremap <M-Backspace> <C-O>:tabprevious<CR>
 
 " Tab settings ruby style
 set tabstop=2 shiftwidth=2 expandtab
@@ -213,7 +207,6 @@ au BufNewFile,BufRead *.txt,*.md,*.markdown inoremap <buffer> <Down> <C-O>gj
 
 " Existing useful commands
 " * Indenting: <C-O> >> and <C-O> <<
-" * Copy/paste: <C-O>v then arrow keys to select, then y/d to copy/cut and <C-O>p to paste
 
 " automatic reload .vimrc
 augroup source_vimrc
@@ -226,3 +219,4 @@ set autoread " Set to auto read when a file is changed from the outside
 " TODO:
 " * Scroll 1 wrapped soft line at a time rather an entire block of wrapped
 "   lines
+"
