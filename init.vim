@@ -34,13 +34,13 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'dietsche/vim-lastplace'
 
 " Autoformat code
-Plug 'Chiel92/vim-autoformat'
+Plug 'sbdchd/neoformat'
 
 " :Rg command to search the whole project for string or pattern
 Plug 'jremmen/vim-ripgrep'
 
 " Asynchronous autocompletion, like deoplete, but not
-"Plug 'roxma/nvim-completion-manager'
+Plug 'roxma/nvim-completion-manager'
 
 " Use tab for lots of things, mainly autocompleting
 Plug 'ervandew/supertab'
@@ -73,21 +73,34 @@ let g:airline_powerline_fonts = 1
 " Neomake config
 set switchbuf+=usetab,newtab
 autocmd BufWritePost,BufWinEnter * silent Neomake
-let g:neomake_cpp_gcc_args = ['-Iinclude', '-fsyntax-only', '-Wall', '-Wextra']
-let g:neomake_cpp_enabled_makers = ['gcc']
 let g:neomake_open_list=2
 let g:neomake_list_height=5
 let g:neomake_verbose=3
 
-" Not sure this is really needed
-let g:neomake_javascript_enabled_makers = ['eslint']
+" Neomake language-specific config
+" C++
+let g:neomake_cpp_gcc_args = ['-Iinclude', '-fsyntax-only', '-Wall', '-Wextra']
+let g:neomake_cpp_enabled_makers = ['gcc']
+" JS
+if executable('semistandard') == 1
+  let g:neomake_javascript_enabled_makers = ['semistandard']
+endif
+if findfile('.eslintrc', '.;') ==# '.eslintrc'
+  let g:neomake_javascript_enabled_makers = ['eslint']
+endif
+if findfile('.jshintrc', '.;') ==# '.jshintrc'
+  let g:neomake_javascript_enabled_makers = ['jshint']
+endif
 
-" Autocompletion
+" Don't show the autocompletion popup as you type
 let g:cm_auto_popup = 0
 
+" CtrlP setup
+
 " Make use of ripgrep for file searching
+" Searches for hidden files except `.git`
 if executable("rg")
-  let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+  let g:ctrlp_user_command = 'rg %s --files --hidden --glob "!.git" --color=never --glob ""'
   let g:ctrlp_use_caching = 0
 endif
 
@@ -96,9 +109,6 @@ let g:ctrlp_custom_ignore = {
   \ 'file': '\.exe$\|\.so$\|\.dat\|\.bin\|\.o$'
   \ }
 
-" CtrlP setup
-" Sgow hidden files
-let g:ctrlp_show_hidden = 1
 " Default to opening filess in a new tab when pressing ENTER
 " To place the file in the currernt buffer use CTRL+B
 let g:ctrlp_prompt_mappings = {

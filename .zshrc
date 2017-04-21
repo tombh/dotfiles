@@ -44,6 +44,10 @@ export ZLS_COLORS=$LS_COLORS
 
 zplug load
 
+precmd() {
+  print -n "\ek$(basename $PWD)\e\\"
+}
+
 # Ensure Home/End do what their meant to
 bindkey "${terminfo[khome]}" beginning-of-line
 bindkey "${terminfo[kend]}" end-of-line
@@ -76,6 +80,6 @@ source $HOME/.cargo/env
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-PATH=$PATH:./node_modules/.bin
+PATH=$PATH:./node_modules/.bin:$HOME/.config/yarn/global/node_modules/.bin
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
