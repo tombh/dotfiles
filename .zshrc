@@ -3,11 +3,15 @@ source ~/.zplug/init.zsh
 
 zplug "zplug/zplug"
 zplug "plugins/colorize", from:oh-my-zsh
+zplug "joel-porquet/zsh-dircolors-solarized"
 zplug "plugins/git", from:oh-my-zsh
-zplug "themes/steeef", from:oh-my-zsh, as:theme
+zplug "tombh/zsh-git-prompt", as:plugin, use:zshrc.sh
+zplug "oz/safe-paste"
+zplug "jreese/zsh-titles"
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-history-substring-search"
-zplug "zsh-users/zsh-syntax-highlighting", defer:3
+zplug "zsh-users/zsh-autosuggestions"
+zplug "zdharma/fast-syntax-highlighting", defer:3
 # cd into most frequently/recently used paths
 zplug "rupa/z", as:plugin, use:z.sh
 
@@ -18,6 +22,20 @@ if ! zplug check --verbose; then
     echo; zplug install
   fi
 fi
+
+zplug load
+
+# @args: red, gree, blue, string
+function print_true_rgb() {
+  fg_open="\033[38;2;"
+  bg_open="\033[48;2;"
+  close="m$4\033[0m"
+  print "$fg_open$1;$2;$3$close"
+}
+
+PROMPT='
+$(print_true_rgb 203 75 22 "%n")@$(print_true_rgb 42 161 152 "%m") $(print_true_rgb 133 153 0 "%~%b") $(git_super_status)
+$(print_true_rgb 32 147 209 " ") '
 
 # History settings
 export HISTFILE=~/.zhistory
@@ -37,16 +55,32 @@ setopt HIST_REDUCE_BLANKS # Remove superfluous blanks before recording entry.
 setopt HIST_VERIFY # Don't execute immediately upon history expansion.
 setopt HIST_BEEP # Beep when accessing nonexistent history.
 
-# Highlights the suggestions created by tab, eg; from `ls`
-zstyle ':completion:*' menu select
-# Supposed to highlight the substring in the suggestion list from `ls`
+# Colours come from this plugin: joel-porquet/zsh-dircolors-solarized
 export ZLS_COLORS=$LS_COLORS
 
-zplug load
+# Highlights the suggestions created by tab, eg; from `ls`
+zstyle ':completion:*' menu select
+# Highlight the substring in the suggestion list from `ls`
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
-precmd() {
-  print -n "\ek$(basename $PWD)\e\\"
-}
+# I just did this to get approximate (fuzzy) completion, where it tries to complete
+# things that are typed incorrectly.
+# _expand expands variables
+zstyle ':completion:*::::' completer _expand _complete _ignored _approximate
+
+# Expand *all* variables
+zstyle ':completion:*:expand:*' tag-order all-expansions
+
+# Helpful completion feedback
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*:descriptions' format '%B%d%b'
+zstyle ':completion:*:messages' format '%d'
+zstyle ':completion:*:warnings' format 'No matches for: %d'
+zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
+zstyle ':completion:*' group-name ''
+
+# Just type the name of a cd'able location and press return to get there
+setopt auto_cd
 
 # Ensure Home/End do what their meant to
 bindkey "${terminfo[khome]}" beginning-of-line
@@ -64,6 +98,7 @@ alias 'o'='xdg-open'
 alias 'e'='nvim'
 alias 'ls'='ls --color'
 alias 'la'='ls -alh'
+alias 'less'='less -r'
 alias 'ht'='hiptext -font /usr/share/fonts/TTF/DejaVuSansMono.ttf -xterm256unicode -fast'
 
 export PATH="$HOME/.rbenv/bin:$PATH"
@@ -82,4 +117,3 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 PATH=$PATH:./node_modules/.bin:$HOME/.config/yarn/global/node_modules/.bin
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
