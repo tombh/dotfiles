@@ -26,10 +26,11 @@ fi
 zplug load
 
 # @args: red, gree, blue, string
+# In ZSH everything inside %{ ... %} has zero width
 function print_true_rgb() {
-  fg_open="\033[38;2;"
-  bg_open="\033[48;2;"
-  close="m$4\033[0m"
+  fg_open="%{\033[38;2;"
+  bg_open="%{\033[48;2;"
+  close="m%}$4%{\033[0m%}"
   print "$fg_open$1;$2;$3$close"
 }
 
@@ -63,11 +64,9 @@ zstyle ':completion:*' menu select
 # Highlight the substring in the suggestion list from `ls`
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
-# I just did this to get approximate (fuzzy) completion, where it tries to complete
-# things that are typed incorrectly.
-# _expand expands variables
+# _ approximate (fuzzy) completion tries to complete things that are typed incorrectly.
+# _expand expands variables.
 zstyle ':completion:*::::' completer _expand _complete _ignored _approximate
-
 # Expand *all* variables
 zstyle ':completion:*:expand:*' tag-order all-expansions
 
@@ -117,3 +116,5 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 PATH=$PATH:./node_modules/.bin:$HOME/.config/yarn/global/node_modules/.bin
 
+# Temporary for vglrun
+export DISPLAY=:1
