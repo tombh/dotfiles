@@ -70,9 +70,6 @@ bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle # mute sound
 bindsym XF86MonBrightnessUp exec xbacklight -inc 5
 bindsym XF86MonBrightnessDown exec xbacklight -dec 5
 
-# Run the lock screen and suspend to RAM when my laptop lid is closed
-bindsym XF86Sleep exec "i3lock -c 000000; systemctl suspend"
-
 # Default to tabbed window layout
 workspace_layout tabbed
 
