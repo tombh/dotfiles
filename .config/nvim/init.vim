@@ -4,6 +4,9 @@ call plug#begin('~/.config/nvim/plugged')
 " A true colour dark colourscheme
 Plug 'joshdick/onedark.vim'
 
+" Follow the rules set in a project's `.editorconfig`
+Plug 'editorconfig/editorconfig-vim'
+
 " Quick fuzzy matched file opening
 Plug 'ctrlpvim/ctrlp.vim'
 " CtrlP-based symbol searching without ctags
@@ -12,8 +15,8 @@ Plug 'tacahiroy/ctrlp-funky'
 Plug 'fisadev/vim-ctrlp-cmdpalette'
 
 " Prettier, more verbose, vim status line
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'ap/vim-buftabline'
+Plug 'itchyny/lightline.vim'
 
 " Show added/deleted/modifed symbols next to lines
 Plug 'airblade/vim-gitgutter'
@@ -43,7 +46,7 @@ Plug 'sbdchd/neoformat'
 Plug 'jremmen/vim-ripgrep'
 
 " Asynchronous autocompletion, like deoplete, but not
-Plug 'roxma/nvim-completion-manager'
+"Plug 'roxma/nvim-completion-manager'
 
 " Use tab for lots of things, mainly autocompleting
 Plug 'ervandew/supertab'
@@ -81,7 +84,6 @@ call plug#end()
 let s:project_root_path = system("git rev-parse --show-toplevel | tr -d '\\n'")
 
 " Theme
-let g:airline#extensions#tabline#enabled = 1
 set termguicolors
 
 if (has("autocmd") && !has("gui_running"))
@@ -90,11 +92,13 @@ if (has("autocmd") && !has("gui_running"))
 end
 colorscheme onedark
 
+" Show the '+' next to modified buffers
+let g:buftabline_indicators=1
+" Use the PmenuSel colour to highligh the active buffer tab
+hi default link BufTabLineCurrent PmenuSel
+
 " Don't show mode in command bar
 set noshowmode
-
-" Force powerline fonts
-let g:airline_powerline_fonts = 1
 
 " Neomake config
 set switchbuf+=usetab
@@ -112,6 +116,9 @@ if executable('semistandard') == 1
   let g:neomake_javascript_enabled_makers = ['semistandard']
 endif
 if findfile('.eslintrc', s:project_root_path) ==# '.eslintrc'
+  let g:neomake_javascript_enabled_makers = ['eslint']
+endif
+if findfile('.eslintrc.js', s:project_root_path) ==# '.eslintrc.js'
   let g:neomake_javascript_enabled_makers = ['eslint']
 endif
 if findfile('.jshintrc', s:project_root_path) ==# '.jshintrc'

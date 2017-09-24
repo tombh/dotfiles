@@ -25,19 +25,6 @@ fi
 
 zplug load
 
-# @args: red, gree, blue, string
-# In ZSH everything inside %{ ... %} has zero width
-function print_true_rgb() {
-  fg_open="%{\033[38;2;"
-  bg_open="%{\033[48;2;"
-  close="m%}$4%{\033[0m%}"
-  print "$fg_open$1;$2;$3$close"
-}
-
-PROMPT='
-$(print_true_rgb 203 75 22 "%n")@$(print_true_rgb 42 161 152 "%m") $(print_true_rgb 133 153 0 "%~%b") $(git_super_status)
-$(print_true_rgb 32 147 209 " ") '
-
 # History settings
 export HISTFILE=~/.zhistory
 export SAVEHIST=100000
@@ -85,6 +72,12 @@ setopt auto_cd
 bindkey "${terminfo[khome]}" beginning-of-line
 bindkey "${terminfo[kend]}" end-of-line
 
+# CTRL+ARROW to move by words
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+# CTRL+BACKSPACE deletes whole word
+bindkey "^H" backward-delete-word
+
 # Bind UP/DOWN to search through history
 bindkey "^[[A" history-substring-search-up
 bindkey "^[[B" history-substring-search-down
@@ -92,6 +85,7 @@ bindkey "^[[B" history-substring-search-down
 export XDG_CONFIG_HOME=$HOME/.config
 export EDITOR=nvim
 
+# Aliases
 alias 'gs'='git status'
 alias 'o'='xdg-open'
 alias 'e'='nvim'
@@ -99,22 +93,45 @@ alias 'ls'='ls --color'
 alias 'la'='ls -alh'
 alias 'less'='less -r'
 alias 'ht'='hiptext -font /usr/share/fonts/TTF/DejaVuSansMono.ttf -xterm256unicode -fast'
+alias dotfile='/usr/bin/git --git-dir=$HOME/Workspace/dotfiles/ --work-tree=$HOME'
 
+# Tmux. Attach to existing session or start new session and attach.
+function tmux_start() {
+  tmux start-server
+  tmux attach
+}
+
+# Rbenv
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
+# Golang
 export GOPATH=~/.go
 export GOBIN=~/.go/bin
 export PATH=$PATH:$GOBIN
 
+# Rust
 source $HOME/.cargo/env
 
-# added by travis gem
+# Travis CI
 [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
 
+# NVM/Node
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 PATH=$PATH:./node_modules/.bin:$HOME/.config/yarn/global/node_modules/.bin
 
-# Temporary for vglrun
-export DISPLAY=:1
+# @args: red, gree, blue, string
+# In ZSH everything inside %{ ... %} has zero width
+function print_true_rgb() {
+  fg_open="%{\033[38;2;"
+  bg_open="%{\033[48;2;"
+  close="m%}$4%{\033[0m%}"
+  print "$fg_open$1;$2;$3$close"
+}
+
+# Prompt in true-colour, with Arch logo for prompt
+PROMPT='
+$(print_true_rgb 203 75 22 "%n")@$(print_true_rgb 42 161 152 "%m") $(print_true_rgb 133 153 0 "%~%b") $(git_super_status)
+$(print_true_rgb 32 147 209 " ") '
+
