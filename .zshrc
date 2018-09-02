@@ -49,7 +49,7 @@ export ZLS_COLORS=$LS_COLORS
 # Highlights the suggestions created by tab, eg; from `ls`
 zstyle ':completion:*' menu select
 # Highlight the substring in the suggestion list from `ls`
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 # _ approximate (fuzzy) completion tries to complete things that are typed incorrectly.
 # _expand expands variables.
@@ -92,8 +92,13 @@ alias 'e'='nvim'
 alias 'ls'='ls --color'
 alias 'la'='ls -alh'
 alias 'less'='less -r'
-alias 'ht'='hiptext -font /usr/share/fonts/TTF/DejaVuSansMono.ttf -xterm256unicode -fast'
-alias dotfile='/usr/bin/git --git-dir=$HOME/Workspace/dotfiles/ --work-tree=$HOME'
+
+# Git dotfiles
+# To setup on a new system:
+# git clone --bare https://github.com/tombh/dotfiles $HOME/Software/dotfiles
+# dotfiles checkout
+# dotfiles config status.showUntrackedFiles no
+alias dotfiles='/usr/bin/git --git-dir=$HOME/Software/dotfiles/ --work-tree=$HOME'
 
 # Tmux. Attach to existing session or start new session and attach.
 function tmux_start() {
@@ -103,7 +108,7 @@ function tmux_start() {
 
 # Rbenv
 export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+which rbenv >/dev/null && eval "$(rbenv init -)"
 
 # Golang
 export GOPATH=~/.go
@@ -111,7 +116,7 @@ export GOBIN=~/.go/bin
 export PATH=$PATH:$GOBIN
 
 # Rust
-source $HOME/.cargo/env
+[ -f $HOME/.cargo/env ] && source $HOME/.cargo/env
 
 # Travis CI
 [ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
@@ -133,5 +138,5 @@ function print_true_rgb() {
 # Prompt in true-colour, with Arch logo for prompt
 PROMPT='
 $(print_true_rgb 203 75 22 "%n")@$(print_true_rgb 42 161 152 "%m") $(print_true_rgb 133 153 0 "%~%b") $(git_super_status)
-$(print_true_rgb 32 147 209 " ") '
+$(print_true_rgb 32 147 209 " ") '
 

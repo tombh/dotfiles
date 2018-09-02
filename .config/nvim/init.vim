@@ -1,3 +1,9 @@
+if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
+  silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source ~/.config/nvim/init.vim
+endif
+
 " Plugins
 call plug#begin('~/.config/nvim/plugged')
 
@@ -100,6 +106,9 @@ hi default link BufTabLineCurrent PmenuSel
 " Don't show mode in command bar
 set noshowmode
 
+set noswapfile
+set backupcopy=yes
+
 " Neomake config
 set switchbuf+=usetab
 autocmd BufWritePost * silent Neomake
@@ -124,6 +133,9 @@ endif
 if findfile('.jshintrc', s:project_root_path) ==# '.jshintrc'
   let g:neomake_javascript_enabled_makers = ['jshint']
 endif
+
+" Always run gofmt on Golang files
+autocmd BufWritePre *.go Neoformat
 
 " Don't show the autocompletion popup as you type
 let g:cm_auto_popup = 0

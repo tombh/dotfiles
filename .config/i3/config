@@ -1,3 +1,7 @@
+# Notes:
+#  Install: noto-fonts-cjk, broadcom-wl
+#  Run: localectl set-x11-keymap gb
+
 # Windows key
 set $mod Mod4
 
@@ -6,7 +10,7 @@ set $mod Mod4
 # font pango:monospace 8
 
 # @tombh
-font pango:Noto 8
+font pango:Noto 0
 
 # @tombh: Hide window title bar and borders
 new_window none
@@ -27,11 +31,14 @@ bindsym $mod+k focus down
 bindsym $mod+l focus up
 bindsym $mod+semicolon focus right
 
-# alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
 bindsym $mod+Right focus right
+
+# Switch between workspaces
+bindsym $mod+Up workspace next
+bindsym $mod+Down workspace prev
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
@@ -61,25 +68,14 @@ bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # Audio multimedia keys
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +5%
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -5%
-bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle # mute sound
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 1 +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume 1 -5%
+bindsym XF86AudioMute exec pactl set-sink-mute 1 toggle # mute sound
 
 # Brightness multimedia keys
 # Requires AUR's light-git
-bindsym XF86MonBrightnessUp exec xbacklight -inc 5
-bindsym XF86MonBrightnessDown exec xbacklight -dec 5
+bindsym XF86MonBrightnessUp exec light -A 5
+bindsym XF86MonBrightnessDown exec light -U 5
 
 # Default to tabbed window layout
 workspace_layout tabbed
-
-# A better DPI for my XPS 13 QHD+ scren
-exec "xrandr --dpi 220"
-
-exec "synclient HorizTwoFingerScroll=1"
-# Lightly tapping the touchpad is the same as a left click
-exec "synclient TapButton1=1"
-exec "synclient TapButton2=3"
-
-# This doesn't work :( Why?
-exec "alacritty --command tmux_start"
