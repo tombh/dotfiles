@@ -46,7 +46,7 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'dietsche/vim-lastplace'
 
 " Autoformat code
-Plug 'sbdchd/neoformat'
+Plug 'chiel92/vim-autoformat'
 
 " :Rg command to search the whole project for string or pattern
 Plug 'jremmen/vim-ripgrep'
@@ -134,8 +134,26 @@ if findfile('.jshintrc', s:project_root_path) ==# '.jshintrc'
   let g:neomake_javascript_enabled_makers = ['jshint']
 endif
 
-" Always run gofmt on Golang files
-autocmd BufWritePre *.go Neoformat
+function! s:maybeUseBundler(jobinfo) abort
+  let l:gemfile = findfile('Gemfile', '.;~') " This could be project-root/Gemfile
+  if len(l:gemfile) > 0
+    if executable('bin/' . self.exe)
+      let self.exe = 'bin/' . self.exe
+    elseif executable('exe/' . self.exe)
+      let self.exe = 'exe/' . self.exe
+    elseif !empty(filter(readfile(l:gemfile), { line -> line =~# 'gem\s+[''"]' . self.exe }))
+      let self.args = ['exec', self.exe] + self.args
+      let self.exe = 'bundle'
+    endif
+  endif
+endfunction
+
+call neomake#config#set('ft.ruby.InitForJob', function('s:maybeUseBundler'))
+
+" Autoformat certain file types
+autocmd BufWritePre *.go Autoformat
+autocmd BufWritePre *.rb Autoformat
+autocmd BufWritePre *.py Autoformat
 
 " Don't show the autocompletion popup as you type
 let g:cm_auto_popup = 0

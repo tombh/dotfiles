@@ -3,7 +3,6 @@ source ~/.zplug/init.zsh
 
 zplug "zplug/zplug"
 zplug "plugins/colorize", from:oh-my-zsh
-zplug "joel-porquet/zsh-dircolors-solarized"
 zplug "plugins/git", from:oh-my-zsh
 zplug "tombh/zsh-git-prompt", as:plugin, use:zshrc.sh
 zplug "oz/safe-paste"
@@ -12,6 +11,7 @@ zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-autosuggestions"
 zplug "zdharma/fast-syntax-highlighting", defer:3
+zplug "seebi/dircolors-solarized"
 # cd into most frequently/recently used paths
 zplug "rupa/z", as:plugin, use:z.sh
 
@@ -43,9 +43,9 @@ setopt HIST_REDUCE_BLANKS # Remove superfluous blanks before recording entry.
 setopt HIST_VERIFY # Don't execute immediately upon history expansion.
 setopt HIST_BEEP # Beep when accessing nonexistent history.
 
-# Colours come from this plugin: joel-porquet/zsh-dircolors-solarized
+# List colours
+eval `dircolors ~/.zplug/repos/seebi/dircolors-solarized/dircolors.ansi-dark`
 export ZLS_COLORS=$LS_COLORS
-
 # Highlights the suggestions created by tab, eg; from `ls`
 zstyle ':completion:*' menu select
 # Highlight the substring in the suggestion list from `ls`
@@ -123,7 +123,8 @@ export PATH=$PATH:$GOBIN
 
 # NVM/Node
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "/usr/share/nvm/init-nvm.sh" ] && \. "/usr/share/nvm/init-nvm.sh"
 PATH=$PATH:./node_modules/.bin:$HOME/.config/yarn/global/node_modules/.bin
 
 # @args: red, gree, blue, string

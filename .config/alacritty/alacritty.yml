@@ -171,6 +171,8 @@ key_bindings:
   - { key: C,        mods: Control|Shift,         action: Copy           }
   - { key: Q,        mods: Command, action: Quit                         }
   - { key: W,        mods: Command, action: Quit                         }
+  - { key: Equals,   mods: Control, action: IncreaseFontSize }
+  - { key: Comma,    mods: Control, action: DecreaseFontSize }
   - { key: Insert,   mods: Shift,   action: PasteSelection               }
   - { key: Home,     mods: Alt,     chars: "\x1b[1;3H",mode: AppCursor   }
   - { key: Home,     mods: Shift,   chars: "\x1b[1;2H",mode: AppCursor   }
