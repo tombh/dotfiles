@@ -1,12 +1,10 @@
 # curl -sL zplug.sh/installer | zsh
-source ~/.zplug/init.zsh
+source /usr/share/zsh/scripts/zplug/init.zsh
 
 zplug "zplug/zplug"
 zplug "plugins/colorize", from:oh-my-zsh
 zplug "plugins/git", from:oh-my-zsh
-zplug "tombh/zsh-git-prompt", as:plugin, use:zshrc.sh
 zplug "oz/safe-paste"
-zplug "jreese/zsh-titles"
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-autosuggestions"
@@ -65,6 +63,9 @@ zstyle ':completion:*:warnings' format 'No matches for: %d'
 zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
 zstyle ':completion:*' group-name ''
 
+# Include hidden files in completions
+setopt globdots
+
 # Just type the name of a cd'able location and press return to get there
 setopt auto_cd
 
@@ -86,12 +87,19 @@ export XDG_CONFIG_HOME=$HOME/.config
 export EDITOR=nvim
 
 # Aliases
+alias 's'='sudo -E '
+alias 'se'='sudoedit'
+alias 'p'='pacman'
+alias 'prm'='pacman -Rsc'
 alias 'gs'='git status'
 alias 'o'='xdg-open'
 alias 'e'='nvim'
+alias 'l'='ls --color'
 alias 'ls'='ls --color'
 alias 'la'='ls -alh'
 alias 'less'='less -r'
+alias ff='find . -type f -name'
+alias be='bundle exec'
 
 # Git dotfiles
 # To setup on a new system:
@@ -136,8 +144,10 @@ function print_true_rgb() {
   print "$fg_open$1;$2;$3$close"
 }
 
+# Requires `pacman -S gitprompt-rs`
 # Prompt in true-colour, with Arch logo for prompt
+setopt promptsubst
 PROMPT='
-$(print_true_rgb 203 75 22 "%n")@$(print_true_rgb 42 161 152 "%m") $(print_true_rgb 133 153 0 "%~%b") $(git_super_status)
-$(print_true_rgb 32 147 209 " ") '
+$(print_true_rgb 203 75 22 "%n")@$(print_true_rgb 42 161 152 "%m") $(print_true_rgb 133 153 0 "%~%b") $(gitprompt-rs zsh)
+$(print_true_rgb 32 147 209 "❤") '
 

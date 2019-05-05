@@ -153,7 +153,7 @@ call neomake#config#set('ft.ruby.InitForJob', function('s:maybeUseBundler'))
 " Autoformat certain file types
 autocmd BufWritePre *.go Autoformat
 autocmd BufWritePre *.rb Autoformat
-autocmd BufWritePre *.py Autoformat
+"autocmd BufWritePre *.py Autoformat
 
 " Don't show the autocompletion popup as you type
 let g:cm_auto_popup = 0
@@ -243,7 +243,7 @@ set cursorline
 
 " Alacritty doesn't seem to support the width and blink yet?
 " Does htis even work?
-set guicursor=a:ver15-blinkwait700-blinkoff400-blinkon250
+"set guicursor=a:ver15-blinkwait700-blinkoff400-blinkon250
 
 " Allow backspace and cursor keys to cross line boundaries
 set whichwrap+=<,>,h,l
