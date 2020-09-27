@@ -17,9 +17,6 @@ dpi:
   x: 96.0
   y: 96.0
 
-# Display tabs using this many cells (changes require restart)
-tabspaces: 2
-
 # When true, bold text is drawn using the bright variant of colors.
 draw_bold_text_with_bright_colors: true
 
@@ -27,24 +24,24 @@ draw_bold_text_with_bright_colors: true
 font:
   # The normal (roman) font face to use.
   normal:
-    family: Noto Sans Mono
+    family: SauceCodePro Nerd Font
     # Style can be specified to pick a specific face.
     # style: Regular
 
   # The bold font face
   bold:
-    family: Noto Sans Mono
+    family: SauceCodePro Nerd Font
     # Style can be specified to pick a specific face.
     # style: Bold
 
   # The italic font face
-  # italic:
-    # family: Source Code Pro
-    # Style can be specified to pick a specific face.
-    # style: Italic
+  italic:
+    family: SauceCodePro Nerd Font
+    #Style can be specified to pick a specific face.
+    style: Italic
 
   # Point size of the font
-  size: 11.0
+  size: 11.2
 
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.
@@ -57,7 +54,8 @@ font:
     y: 0
 
 # Should display the render timer
-render_timer: false
+debug:
+  render_timer: false
 
 # Visual Bell
 #
@@ -81,7 +79,7 @@ render_timer: false
 #
 # To completely disable the visual bell, set its duration to 0.
 #
-visual_bell:
+bell:
   animation: EaseOutExpo
   duration: 0
 

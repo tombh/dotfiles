@@ -1,9 +1,12 @@
+zmodload zsh/zprof
 # curl -sL zplug.sh/installer | zsh
+# Might need to: `touch $ZPLUG_LOADFILE`, otherwise startup can be slow.
 source /usr/share/zsh/scripts/zplug/init.zsh
 
 zplug "zplug/zplug"
 zplug "plugins/colorize", from:oh-my-zsh
 zplug "plugins/git", from:oh-my-zsh
+zplug "plugins/extract",   from:oh-my-zsh
 zplug "oz/safe-paste"
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-history-substring-search"
@@ -12,14 +15,6 @@ zplug "zdharma/fast-syntax-highlighting", defer:3
 zplug "seebi/dircolors-solarized"
 # cd into most frequently/recently used paths
 zplug "rupa/z", as:plugin, use:z.sh
-
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-  printf "Install? [y/N]: "
-  if read -q; then
-    echo; zplug install
-  fi
-fi
 
 zplug load
 
@@ -90,16 +85,44 @@ export EDITOR=nvim
 alias 's'='sudo -E '
 alias 'se'='sudoedit'
 alias 'p'='pacman'
-alias 'prm'='pacman -Rsc'
+alias 'yS'='yay -S'
+alias 'yR'='yay -Rsc'
 alias 'gs'='git status'
 alias 'o'='xdg-open'
 alias 'e'='nvim'
-alias 'l'='ls --color'
-alias 'ls'='ls --color'
-alias 'la'='ls -alh'
+alias 'l'='exa --long --tree --level=2 --git --all'
+alias 'la'='exa --long --git --all'
+alias 'ls'='exa --grid'
 alias 'less'='less -r'
-alias ff='find . -type f -name'
+alias ff='fd . -type f -name'
 alias be='bundle exec'
+alias kc='kubectl'
+
+alias urldecode='python -c "import sys, urllib.parse as ul; \
+  print(ul.unquote_plus(sys.argv[1]))"'
+alias urlencode='python -c "import sys, urllib.parse as ul; \
+  print(ul.quote_plus(sys.argv[1]))"'
+
+bindkey -s '^[ ' 'xstarter\n'
+
+# Pressing SPACE after alias expands it
+function expand-alias() {
+    zle _expand_alias
+    zle self-insert
+}
+zle -N expand-alias
+bindkey -M main ' ' expand-alias
+
+export SKIM_DEFAULT_COMMAND="fd --hidden --exclude 'cache' --exclude '.git' . $HOME"
+export SKIM_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export SKIM_CTRL_T_OPTS="--preview='head -n10 {}'"
+export SKIM_ALT_C_COMMAND="fd --hidden --exclude '*cache*' --exclude '.git' -t d . $HOME"
+export SKIM_ALT_C_OPTS="--preview='exa --tree --level=2 --colour=always {}'"
+
+export GPG_TTY=$(tty)
+gpg-connect-agent updatestartuptty /bye >/dev/null
+
+eval `ssh-agent` >/dev/null
 
 # Git dotfiles
 # To setup on a new system:
@@ -108,15 +131,12 @@ alias be='bundle exec'
 # dotfiles config status.showUntrackedFiles no
 alias dotfiles='/usr/bin/git --git-dir=$HOME/Software/dotfiles/ --work-tree=$HOME'
 
-# Tmux. Attach to existing session or start new session and attach.
-function tmux_start() {
-  tmux start-server
-  tmux attach
-}
-
 # Rbenv
 export PATH="$HOME/.rbenv/bin:$PATH"
 which rbenv >/dev/null && eval "$(rbenv init -)"
+
+# Python poetry
+[ -f $HOME/.poetry/env ] && source $HOME/.poetry/env
 
 # Golang
 export GOPATH=~/.go
@@ -125,29 +145,39 @@ export PATH=$PATH:$GOBIN
 
 # Rust
 [ -f $HOME/.cargo/env ] && source $HOME/.cargo/env
+export PATH="$HOME/.cargo/bin/:$PATH"
 
-# Travis CI
-[ -f ~/.travis/travis.sh ] && source ~/.travis/travis.sh
+# Personal
+secrets=$HOME/Syncthing/SyncMisc/secrets.env
+[ -f $secrets ] && source $secrets
 
 # NVM/Node
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "/usr/share/nvm/init-nvm.sh" ] && \. "/usr/share/nvm/init-nvm.sh"
+#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+#[ -s "/usr/share/nvm/init-nvm.sh" ] && \. "/usr/share/nvm/init-nvm.sh"
 PATH=$PATH:./node_modules/.bin:$HOME/.config/yarn/global/node_modules/.bin
 
-# @args: red, gree, blue, string
-# In ZSH everything inside %{ ... %} has zero width
-function print_true_rgb() {
-  fg_open="%{\033[38;2;"
-  bg_open="%{\033[48;2;"
-  close="m%}$4%{\033[0m%}"
-  print "$fg_open$1;$2;$3$close"
-}
+# All of the languages
+source $HOME/.asdf/asdf.sh
 
-# Requires `pacman -S gitprompt-rs`
-# Prompt in true-colour, with Arch logo for prompt
-setopt promptsubst
-PROMPT='
-$(print_true_rgb 203 75 22 "%n")@$(print_true_rgb 42 161 152 "%m") $(print_true_rgb 133 153 0 "%~%b") $(gitprompt-rs zsh)
-$(print_true_rgb 32 147 209 "❤") '
+# Kubectl plugins
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+export PATH=$PATH:~/.kube/plugins/jordanwilson230
 
+# Kubectl completions
+source <(kubectl completion zsh)
+
+# Record history in Erlang REPL
+export ERL_AFLAGS="-kernel shell_history enabled"
+
+# Python pip
+export PATH="$HOME/.local/bin:$PATH"
+
+# User binaries
+export PATH="$HOME/bin:$PATH"
+
+# Fuzzy finder
+[ -f /usr/share/skim/completion.zsh ] && source /usr/share/skim/completion.zsh
+[ -f /usr/share/skim/key-bindings.zsh ] && source /usr/share/skim/key-bindings.zsh
+
+eval "$(starship init zsh)"

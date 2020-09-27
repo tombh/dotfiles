@@ -2,15 +2,11 @@
   "segments": {
     "right": [
       {
-        "function": "powerline.segments.common.sys.uptime",
-        "priority": 50
+        "function": "tombh.show_current_context"
       },
       {
         "function": "powerline.segments.common.sys.system_load",
         "priority": 50
-      },
-      {
-        "function": "powerline.segments.common.sys.cpu_load_percent"
       },
       {
         "function": "powerline.segments.common.net.network_load"
@@ -19,13 +15,7 @@
         "function": "powerline.segments.common.bat.battery"
       },
       {
-        "function": "powerline.segments.common.wthr.weather"
-      },
-      {
-        "function": "ip_location.date"
-      },
-      {
-        "function": "powerline.segments.common.time.date"
+        "function": "tombh.hello"
       },
       {
         "function": "powerline.segments.common.time.date",

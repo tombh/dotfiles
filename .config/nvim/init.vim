@@ -13,28 +13,19 @@ Plug 'joshdick/onedark.vim'
 " Follow the rules set in a project's `.editorconfig`
 Plug 'editorconfig/editorconfig-vim'
 
-" Quick fuzzy matched file opening
-Plug 'ctrlpvim/ctrlp.vim'
-" CtrlP-based symbol searching without ctags
-Plug 'tacahiroy/ctrlp-funky'
-" Fuzzy match Vim commands, like Atom/Sublime Command Palette
-Plug 'fisadev/vim-ctrlp-cmdpalette'
-
-" Prettier, more verbose, vim status line
+" Show buffers in tabs along the top
 Plug 'ap/vim-buftabline'
+" Prettier, more verbose, vim status line
 Plug 'itchyny/lightline.vim'
 
-" Show added/deleted/modifed symbols next to lines
-Plug 'airblade/vim-gitgutter'
 " Lots of git shortcuts
 Plug 'tpope/vim-fugitive'
-Plug 'idanarye/vim-merginal'
+
+" Open files in Github
+Plug 'tpope/vim-rhubarb'
 
 " Lazy loading syntax support for squillions of languages
 Plug 'sheerun/vim-polyglot'
-
-" Asynchronous linter
-Plug 'neomake/neomake'
 
 " Just some nice functions to comment code quickly
 Plug 'scrooloose/nerdcommenter'
@@ -48,18 +39,28 @@ Plug 'dietsche/vim-lastplace'
 " Autoformat code
 Plug 'chiel92/vim-autoformat'
 
-" :Rg command to search the whole project for string or pattern
-Plug 'jremmen/vim-ripgrep'
+" Autocompletion and Language Server manager
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+Plug 'amiralies/coc-elixir', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-emmet', {'do': 'yarn install --frozen-lockfile'}
+Plug 'josa42/coc-go', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-lists', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-prettier', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-python', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-solargraph', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
 
-" Asynchronous autocompletion, like deoplete, but not
-"Plug 'roxma/nvim-completion-manager'
+Plug 'mattn/emmet-vim'
 
-" Use tab for lots of things, mainly autocompleting
-Plug 'ervandew/supertab'
+" Autoclose brackets if/end, etc
+Plug 'cohama/lexima.vim'
 
-" Ultisnips snippet engine.
-Plug 'SirVer/ultisnips'
-" Snippets are separate from the actual ultisnips engine
+" Comprehensive snippet collection
 Plug 'honza/vim-snippets'
 
 " Tree view of files
@@ -82,12 +83,14 @@ Plug 'tombh/novim-mode'
 " Adds various icons like for filetypes, etc
 Plug 'ryanoasis/vim-devicons'
 
+" Golang
+Plug 'fatih/vim-go', { 'do': ':silent GoUpdateBinaries' }
+
+" Minimap sugar
+Plug 'wfxr/minimap.vim'
+
 " Add plugins to &runtimepath
 call plug#end()
-
-" Provide a variable that contains the current root as defined by the nearest
-" .git folder.
-let s:project_root_path = system("git rev-parse --show-toplevel | tr -d '\\n'")
 
 " Theme
 set termguicolors
@@ -98,9 +101,13 @@ if (has("autocmd") && !has("gui_running"))
 end
 colorscheme onedark
 
+" Stops SQL files triggering autocomplete errors
+let g:omni_sql_no_default_maps = 1
+let g:loaded_sql_completion = 0
+
 " Show the '+' next to modified buffers
 let g:buftabline_indicators=1
-" Use the PmenuSel colour to highligh the active buffer tab
+" Use the PmenuSel colour to highlight the active buffer tab
 hi default link BufTabLineCurrent PmenuSel
 
 " Don't show mode in command bar
@@ -109,76 +116,107 @@ set noshowmode
 set noswapfile
 set backupcopy=yes
 
-" Neomake config
-set switchbuf+=usetab
-autocmd BufWritePost * silent Neomake
-let g:neomake_open_list=2
-let g:neomake_list_height=5
-let g:neomake_verbose=3
+" START OF COC
+" Smaller updatetime for CursorHold & CursorHoldI
+set updatetime=300
 
-" Neomake language-specific config
-" C++
-let g:neomake_cpp_gcc_args = ['-Iinclude', '-fsyntax-only', '-Wall', '-Wextra']
-let g:neomake_cpp_enabled_makers = ['gcc']
-" JS
-if executable('semistandard') == 1
-  let g:neomake_javascript_enabled_makers = ['semistandard']
-endif
-if findfile('.eslintrc', s:project_root_path) ==# '.eslintrc'
-  let g:neomake_javascript_enabled_makers = ['eslint']
-endif
-if findfile('.eslintrc.js', s:project_root_path) ==# '.eslintrc.js'
-  let g:neomake_javascript_enabled_makers = ['eslint']
-endif
-if findfile('.jshintrc', s:project_root_path) ==# '.jshintrc'
-  let g:neomake_javascript_enabled_makers = ['jshint']
-endif
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
 
-function! s:maybeUseBundler(jobinfo) abort
-  let l:gemfile = findfile('Gemfile', '.;~') " This could be project-root/Gemfile
-  if len(l:gemfile) > 0
-    if executable('bin/' . self.exe)
-      let self.exe = 'bin/' . self.exe
-    elseif executable('exe/' . self.exe)
-      let self.exe = 'exe/' . self.exe
-    elseif !empty(filter(readfile(l:gemfile), { line -> line =~# 'gem\s+[''"]' . self.exe }))
-      let self.args = ['exec', self.exe] + self.args
-      let self.exe = 'bundle'
-    endif
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:user_emmet_mode='a'
+let g:user_emmet_install_global = 0
+autocmd FileType html,css,scss,eruby,less EmmetInstall
+
+" Remap keys for gotos
+inoremap <silent> <M-i> <C-O>:execute "normal \<Plug>(coc-implementation)"<CR>
+inoremap <silent> <M-r> <C-O>:execute "normal \<Plug>(coc-references)"<CR>
+inoremap <silent> <M-h> <C-O>:execute "normal \<Plug>(coc-rename)"<CR>
+inoremap <silent> <M-e> <C-O>:call CocActionAsync('diagnosticInfo')<CR>
+" Use Alt-k to show documentation in preview window
+inoremap <silent> <M-d> <C-O>:call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
   endif
 endfunction
 
-call neomake#config#set('ft.ruby.InitForJob', function('s:maybeUseBundler'))
+"autocmd CursorHoldI * call CocActionAsync('diagnosticInfo')
+"autocmd CursorHoldI * call s:Autocmd('CursorHold', +expand('<abuf>'))
+
+hi CocErrorHighlight guibg=#3f0e0e
+hi CocWarningHighlight guibg=#3a3f0e
+hi CocInfoHighlight guibg=#15165b
+hi CocHintHighlight guibg=#0e3f0f
+
+let g:lightline = {
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'cocstatus', 'readonly', 'relativepath', 'modified' ] ],
+      \   'right': [[ 'lineinfo' ], [ 'percent' ]]
+      \ },
+      \ 'component_function': {
+      \   'cocstatus': 'coc#status'
+      \ },
+      \ }
+" END OF COC
+""""""""""""""""""""""""
+
+let g:NERDTreeGitStatusIndicatorMapCustom = {
+    \ "Modified"  : "~",
+    \ "Staged"    : "+",
+    \ "Untracked" : "",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
+
+" Surround highlighted string with character
+snoremap ( <S-LEFT><ESC>`>a)<ESC>`<i(
+snoremap [ <S-LEFT><ESC>`>a]<(ESC)>`<i[
+snoremap { <S-LEFT><ESC>`>a}<ESC>`<i{
+snoremap " <S-LEFT><ESC>`>a"<ESC>`<i"
+snoremap ' <S-LEFT><ESC>`>a'<ESC>`<i'
+snoremap ` <S-LEFT><ESC>`>a`<ESC>`<i`
+snoremap < <S-LEFT><ESC>`>a><ESC>`<i<
 
 " Autoformat certain file types
+"let g:formatters_javascript = ['prettier']
+let g:formatdef_mix_format = '"/home/tombh/.asdf/shims/mix format -"'
+"autocmd BufWritePre *.sql Autoformat
 autocmd BufWritePre *.go Autoformat
+"autocmd BufWritePre *.js Autoformat
+"autocmd BufWritePre *.ts Autoformat
+autocmd BufWritePre *.json Autoformat
+autocmd BufWritePre *.exs,*.ex Autoformat
+autocmd BufWritePre *.css Autoformat
+autocmd BufWritePre *.scss Autoformat
 autocmd BufWritePre *.rb Autoformat
-"autocmd BufWritePre *.py Autoformat
-
-" Don't show the autocompletion popup as you type
-let g:cm_auto_popup = 0
-
-" CtrlP setup
-" Make use of ripgrep for file searching
-" Searches for hidden files except `.git`
-if executable("rg")
-  let g:ctrlp_user_command = 'rg %s --files --hidden --glob "!.git" --color=never --glob ""'
-  let g:ctrlp_use_caching = 0
-endif
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\.git$\|vendor\|node_modules\|public\/images\|public\/system\|data\|log\|tmp$',
-  \ 'file': '\.exe$\|\.so$\|\.dat\|\.bin\|\.o$'
-  \ }
-
-" CTRL+j function finding
-let g:ctrlp_funky_matchtype = 'path'
-let g:ctrlp_funky_syntax_highlight = 1
-
-" Highlight JSX in normal files
-let g:jsx_ext_required = 0
+autocmd BufWritePre *.py Autoformat
+autocmd BufWritePre *.rs Autoformat
 
 " Prompt when the file changes on disk
-au CursorHold * checktime
+" Not sure this even works in nvim
+autocmd CursorHoldI,CursorHold * checktime
+" Useful when git has commited and you focus back to a pane
+autocmd User CursorHoldI * CocGitStatusChange
 
 " Pane navigation with magic vim-tmux-navigator
 let g:tmux_navigator_no_mappings = 1
@@ -198,16 +236,28 @@ snoremap <silent> <C-W> <C-O>:call novim_mode#ClosePane()<CR>
 nnoremap <silent> <C-W> :call novim_mode#ClosePane()<CR>
 set hidden
 
-" Ensure CtrlP doesn't get overridden by autocomplete in insertmode
-inoremap <C-P> <C-O>:CtrlP<CR>
+" Quickly fuzzy find files
+inoremap <C-P> <C-O>:CocList files<CR>
+nnoremap <C-P> :CocList files<CR>
 " Shortcut for choosing between open files in buffer
-inoremap <C-B> <C-O>:CtrlPBuffer<CR>
+inoremap <C-B> <C-O>:CocList buffers<CR>
 " Fuzzy find Vim commands, like atom/sublime CTRL+SHIFT+P
-let g:ctrlp_cmdpalette_execute = 1
-inoremap <A-p> <C-O>:CtrlPCmdPalette<CR>
+inoremap <A-p> <C-O>:CocList vimcommands<CR>
+nnoremap <A-p> :CocList vimcommands<CR>
+" Instantly reopen previous list in same state
+inoremap <A-l> <C-O>:CocListResume<CR>
+nnoremap <A-l> :CocListResume<CR>
+" Open the traditional vim quickfix list pane
+inoremap <A-q> <C-O>:CocList quickfix<CR>
 
-" Shortcut for CtrlPFunky symbol lookup
-inoremap <C-J> <C-O>:CtrlPFunky<CR>
+" Shortcuts for finding things
+let g:novim_mode_use_finding = 0
+inoremap <C-f> <C-O>:CocList words<CR>
+nnoremap <C-f> :CocList words<CR>
+inoremap <A-f> <C-O>:CocList grep<CR>
+inoremap <silent> <A-F> <C-O>:exe 'CocList -I --normal --input='.expand('<cword>').' grep'<CR>
+" Fuzzy find symbol in current buffer
+inoremap <C-J> <C-O>:CocList outline<CR>
 
 " CTRL+_ (and CTRL+/ on my machine at least) toggles comments
 inoremap <C-_> <C-O>:call NERDComment('n', 'toggle')<CR>
@@ -222,12 +272,44 @@ let NERDTreeShowHidden = 1
 " Close NERDTree if it's the last window
 autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
-" Buffer actions
+" Buffer navigation
 inoremap <silent> <C-PageUp> <C-O>:bp<CR>
+nnoremap <silent> <C-PageUp> :bp<CR>
+snoremap <silent> <C-PageUp> <C-O>:<C-W>bp<CR>
 inoremap <silent> <C-PageDown> <C-O>:bn<CR>
+nnoremap <silent> <C-PageDown> <C-O>:bn<CR>
+snoremap <silent> <C-PageDown> <C-O>:<C-W>bn<CR>
 
-" Ripgrep
-inoremap <M-f> <C-O>:Rg<Space>
+" Load git history using tpope's fugitive
+inoremap <silent> <A-L> <C-O>:0Glog<CR>
+" List all changed files
+inoremap <silent> <A-g> <C-O>:CocList gstatus<CR>
+
+" Quicklist shortcuts
+nnoremap <A-=> :copen<CR>
+nnoremap <A-[> :cprev<CR>
+nnoremap <A-]> :cnext<CR>
+" Coclist
+inoremap <A-{> <C-O>:CocPrev<CR>
+nnoremap <A-{> :CocPrev<CR>
+inoremap <A-}> <C-O>:CocNext<CR>
+nnoremap <A-}> :CocNext<CR>
+
+if exists('$WAYLAND_DISPLAY')
+  " clipboard on wayland with newline fix
+  let g:clipboard = {
+      \   'name': 'WL-Clipboard with ^M Trim',
+      \   'copy': {
+      \      '+': 'wl-copy --foreground --type text/plain',
+      \      '*': 'wl-copy --foreground --type text/plain --primary',
+      \    },
+      \   'paste': {
+      \      '+': {-> systemlist('wl-paste --no-newline | sed -e "s/\r$//"', '', 1)},
+      \      '*': {-> systemlist('wl-paste --no-newline --primary | sed -e "s/\r$//"', '', 1)},
+      \   },
+      \   'cache_enabled': 1,
+      \ }
+endif
 
 " Tab settings ruby style
 set tabstop=2 shiftwidth=2 expandtab
@@ -243,7 +325,7 @@ set cursorline
 
 " Alacritty doesn't seem to support the width and blink yet?
 " Does htis even work?
-"set guicursor=a:ver15-blinkwait700-blinkoff400-blinkon250
+set guicursor=a:ver15-blinkwait700-blinkoff400-blinkon250
 
 " Allow backspace and cursor keys to cross line boundaries
 set whichwrap+=<,>,h,l
@@ -259,16 +341,6 @@ set sidescroll=1
 
 " Case insensitive search, unless an uppercase char is used
 set ignorecase smartcase
-
-" Autocomplete popup window settings
-" Choose the option with the longest match in common and preselect one from
-" the menu.
-set completeopt=longest,menuone
-" <Enter> always selects the highlighed match
-inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-
-" Continue tabbing through sections of snippet once it's expanded
-let g:UltiSnipsJumpForwardTrigger='<tab>'
 
 " automatic reload .vimrc
 augroup source_vimrc
