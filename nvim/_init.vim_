@@ -48,7 +48,7 @@ Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-lists', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-prettier', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-python', {'do': 'yarn install --frozen-lockfile'}
+Plug 'fannheyward/coc-pyright', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-solargraph', {'do': 'yarn install --frozen-lockfile'}
@@ -89,8 +89,16 @@ Plug 'fatih/vim-go', { 'do': ':silent GoUpdateBinaries' }
 " Minimap sugar
 Plug 'wfxr/minimap.vim'
 
+" File finder
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+
+
 " Add plugins to &runtimepath
 call plug#end()
+
+let g:coc_node_args = ['--max-old-space-size=8192']
 
 " Theme
 set termguicolors
@@ -144,7 +152,7 @@ inoremap <silent> <M-i> <C-O>:execute "normal \<Plug>(coc-implementation)"<CR>
 inoremap <silent> <M-r> <C-O>:execute "normal \<Plug>(coc-references)"<CR>
 inoremap <silent> <M-h> <C-O>:execute "normal \<Plug>(coc-rename)"<CR>
 inoremap <silent> <M-e> <C-O>:call CocActionAsync('diagnosticInfo')<CR>
-" Use Alt-k to show documentation in preview window
+" Use Alt-d to show documentation in preview window
 inoremap <silent> <M-d> <C-O>:call <SID>show_documentation()<CR>
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -200,6 +208,7 @@ snoremap < <S-LEFT><ESC>`>a><ESC>`<i<
 " Autoformat certain file types
 "let g:formatters_javascript = ['prettier']
 let g:formatdef_mix_format = '"/home/tombh/.asdf/shims/mix format -"'
+let g:formatters_python = ['black']
 "autocmd BufWritePre *.sql Autoformat
 autocmd BufWritePre *.go Autoformat
 "autocmd BufWritePre *.js Autoformat
@@ -341,6 +350,9 @@ set sidescroll=1
 
 " Case insensitive search, unless an uppercase char is used
 set ignorecase smartcase
+
+" Don't display red whitespace marks in minimap
+autocmd FileType minimap DisableWhitespace
 
 " automatic reload .vimrc
 augroup source_vimrc
