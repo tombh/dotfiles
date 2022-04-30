@@ -1,22 +1,17 @@
-zmodload zsh/zprof
-# curl -sL zplug.sh/installer | zsh
-# Might need to: `touch $ZPLUG_LOADFILE`, otherwise startup can be slow.
-source /usr/share/zsh/scripts/zplug/init.zsh
+# zmodload zsh/zprof
 
-zplug "zplug/zplug"
-zplug "plugins/colorize", from:oh-my-zsh
-zplug "plugins/git", from:oh-my-zsh
-zplug "plugins/extract",   from:oh-my-zsh
-zplug "oz/safe-paste"
-zplug "zsh-users/zsh-completions"
-zplug "zsh-users/zsh-history-substring-search"
-zplug "zsh-users/zsh-autosuggestions"
-zplug "zdharma/fast-syntax-highlighting", defer:3
-zplug "seebi/dircolors-solarized"
-# cd into most frequently/recently used paths
-zplug "rupa/z", as:plugin, use:z.sh
-
-zplug load
+zstyle ':zim:zmodule' use 'degit'
+ZIM_HOME=~/.zim
+# Download zimfw plugin manager if missing.
+if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
+  curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
+      https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+fi
+# Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
+if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
+  source ${ZIM_HOME}/zimfw.zsh init -q
+fi
+source ${ZIM_HOME}/init.zsh
 
 # History settings
 export HISTFILE=~/.zhistory
