@@ -7,40 +7,21 @@ set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
 set -g @plugin 'tmux-plugins/tmux-open'
+set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 
-# Initialises true colour support
-set -g default-terminal "screen-256color"
-# This applies to the *host* $TERM
-set -ga terminal-overrides ",xterm-256color:Tc"
+source-file ~/.config/tmux/theme.conf
 
-onedark_black="#202020"
-onedark_blue="#61afef"
-onedark_yellow="#e5c07b"
-onedark_red="#e06c75"
-onedark_white="#aab2bf"
-onedark_green="#98c379"
-onedark_visual_grey="#3e4452"
-onedark_comment_grey="#5c6370"
+set -g default-terminal "tmux"
+set -g set-clipboard external
+# This applies to the *host* $TERM. With clever hack to support OC52 anywhere clipboard copy
+set-option -ag terminal-overrides ",xterm-256color:Ms=\\E]52;c;%p2%s\\7"
+set -ag terminal-overrides "vte*:XT:Ms=\\E]52;c;%p2%s\\7,xterm*:XT:Ms=\\E]52;c;%p2%s\\7"
+set -ga terminal-overrides ",xterm-256color:RGB"
 
-set-window-option -g mode-style "bg=$onedark_visual_grey"
+set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'  # undercurl support
+set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # underscore colours - needs tmux-3.0
 
-set-option -gq display-panes-active-colour "$onedark_yellow"
-set-option -gq display-panes-colour "$onedark_blue"
-
-set-option -gq status-bg "$onedark_black"
-set-option -gq status-fg "$onedark_white"
-
-set-option -gq @prefix_highlight_fg "$onedark_black"
-set-option -gq @prefix_highlight_bg "$onedark_green"
-set-option -gq @prefix_highlight_copy_mode_attr "fg=$onedark_black,bg=$onedark_green"
-
-set-option -gq window-style "fg=$onedark_comment_grey,bg=$onedark_black"
-set-option -gq window-active-style "fg=$onedark_white,bg=#151515"
-
-set-option -gq pane-border-fg "$onedark_visual_grey"
-set-option -gq pane-active-border-fg "$onedark_green"
-set-option -gq pane-border-bg "$onedark_black"
-set-option -gq pane-active-border-bg "$onedark_black"
+set -ga terminal-features "sync"
 
 # Detects whether Vim is currently loaded
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
@@ -66,7 +47,7 @@ set -g focus-events on
 set -g escape-time 0
 
 # Try to save on memory by limiting how far you can scrollback
-set -g history-limit 10000
+set -g history-limit 100000
 
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator
@@ -82,10 +63,10 @@ bind-key -T copy-mode-vi M-Up    select-pane -U
 bind-key -T copy-mode-vi M-Right select-pane -R
 
 # Basic navigation
-bind -n M-End      next-window
-bind -n M-Home     previous-window
-bind -n M-PageUp   switch-client -n
-bind -n M-PageDown switch-client -p
+bind -n C-M-Right next-window
+bind -n C-M-Left  previous-window
+bind -n C-M-Up    switch-client -n
+bind -n C-M-Down  switch-client -p
 
 # Making splits
 bind | split-window -h -c "#{pane_current_path}"
@@ -98,8 +79,7 @@ set-window-option -g mode-keys vi
 # Easily get into copy mode but don't mess with Vim.
 bind -n Pageup if-shell "$is_vim" "send-keys Pageup" "copy-mode -u"
 # Conventional shortcuts for copy and paste
-bind -n -T copy-mode-vi C-c send -X copy-pipe 'wl-copy'
-bind -n C-v if-shell "$is_vim" "send-keys C-v" 'run "tmux set-buffer \"$(wl-paste)\"; tmux paste-buffer"'
+bind-key -T copy-mode-vi C-c send-keys -X copy-selection-and-cancel
 bind -n S-Left if-shell "$is_vim" "send-keys S-Left" "copy-mode \; send -X begin-selection \; send-keys Left"
 bind -n S-Right if-shell "$is_vim" "send-keys S-Right" "copy-mode \; send -X begin-selection \; send-keys Right"
 bind -n C-Up if-shell "$is_vim" "send-keys C-Up" "copy-mode \; send-keys Up"
@@ -132,6 +112,8 @@ bind -n -T copy-mode-vi S-Down \
     "send-keys -X cursor-down" \
     "send-keys -X begin-selection \; send-keys -X cursor-down"
 
+# ALT+d select current word
+bind -n M-d if-shell "$is_vim" "send-keys M-d" "copy-mode \; send-keys b \; send -X begin-selection \; send-keys E"
 # CTRL+d select current word
 bind -n -T copy-mode-vi C-d send-keys b \; send -X begin-selection \; send-keys E
 # CTRL+LEFT/RIGHT move by word
@@ -142,11 +124,13 @@ bind -n -T copy-mode-vi C-Right send-keys E
 bind -n M-z resize-pane -Z
 
 set -g @continuum-restore 'on'
-
-run-shell "if ! ps aux | grep -v grep | grep 'powerline-daemon -q' > /dev/null; then powerline-daemon -q; fi"
-source "/usr/lib/python3.8/site-packages/powerline/bindings/tmux/powerline.conf"
+set -g @resurrect-capture-pane-contents 'on'
+set -g @resurrect-processes 'nvim htop btm "sudo nethogs -C" tail "sampler --config ~/.config/sampler.yml"'
 
 if-shell '[[ $(tmux list-sessions | wc -l ) -eq 0 ]]' 'run-shell $HOME/.tmux/plugins/tmux-resurrect/scripts/restore.sh'
 
+bind-key R source-file ~/.config/tmux/tmux.conf \; display-message "~/.config/tmux/tmux.conf reloaded"
+
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'
+
