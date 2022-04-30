@@ -13,9 +13,9 @@ env:
 
 # The FreeType rasterizer needs to know the device DPI for best results
 # (changes require restart)
-dpi:
-  x: 96.0
-  y: 96.0
+window:
+  decorations: none
+  startup_mode: Maximized
 
 # When true, bold text is drawn using the bright variant of colors.
 draw_bold_text_with_bright_colors: true
@@ -26,13 +26,13 @@ font:
   normal:
     family: SauceCodePro Nerd Font
     # Style can be specified to pick a specific face.
-    # style: Regular
+    style: Regular
 
   # The bold font face
   bold:
     family: SauceCodePro Nerd Font
     # Style can be specified to pick a specific face.
-    # style: Bold
+    style: Bold
 
   # The italic font face
   italic:
@@ -116,7 +116,7 @@ bell:
 # (e.g. "\x1b[5~") is? Open another terminal (like xterm) without tmux,
 # then run `showkey -a` to get the sequence associated to a key combination.
 key_bindings:
-  - { key: V,        mods: Control|Shift|Command, action: Paste          }
+  - { key: V,        mods: Control, action: Paste          }
   - { key: C,        mods: Control|Shift,         action: Copy           }
   - { key: Q,        mods: Command, action: Quit                         }
   - { key: W,        mods: Command, action: Quit                         }
@@ -162,6 +162,7 @@ key_bindings:
   - { key: Down,                    chars: "\x1b[B",   mode: ~AppCursor  }
   - { key: Down,                    chars: "\x1bOB",   mode: AppCursor   }
   - { key: Tab,      mods: Shift,   chars: "\x1b[Z"                      }
+  - { key: Tab,      mods: Control, chars: "\x1b[27;5;9~"                }
   - { key: F1,                      chars: "\x1bOP"                      }
   - { key: F2,                      chars: "\x1bOQ"                      }
   - { key: F3,                      chars: "\x1bOR"                      }
@@ -212,3 +213,34 @@ selection:
 #  program: /bin/bash
 #  args:
 #    - --login
+
+
+# Colors (Floraverse)
+colors:
+  bright:
+    black: '#936e9d'
+    blue: '#40a4cf'
+    cyan: '#62caa8'
+    green: '#b4ce59'
+    magenta: '#f12aae'
+    red: '#d02063'
+    white: '#bfb5ab'
+    yellow: '#fac357'
+  cursor:
+    cursor: '#bbbbbb'
+    text: '#ffffff'
+  normal:
+    black: '#0e0d15'
+    blue: '#1d6da1'
+    cyan: '#42a38c'
+    green: '#5d731a'
+    magenta: '#b7077e'
+    red: '#94305c'
+    white: '#f3e0b8'
+    yellow: '#cd751c'
+  primary:
+    background: '#0e0d15'
+    foreground: '#dbd1b9'
+  selection:
+    background: '#f3e0b8'
+    text: '#08002e'
