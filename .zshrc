@@ -31,28 +31,6 @@ setopt HIST_REDUCE_BLANKS # Remove superfluous blanks before recording entry.
 setopt HIST_VERIFY # Don't execute immediately upon history expansion.
 setopt HIST_BEEP # Beep when accessing nonexistent history.
 
-# List colours
-eval `dircolors ~/.zplug/repos/seebi/dircolors-solarized/dircolors.ansi-dark`
-export ZLS_COLORS=$LS_COLORS
-# Highlights the suggestions created by tab, eg; from `ls`
-zstyle ':completion:*' menu select
-# Highlight the substring in the suggestion list from `ls`
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-
-# _ approximate (fuzzy) completion tries to complete things that are typed incorrectly.
-# _expand expands variables.
-zstyle ':completion:*::::' completer _expand _complete _ignored _approximate
-# Expand *all* variables
-zstyle ':completion:*:expand:*' tag-order all-expansions
-
-# Helpful completion feedback
-zstyle ':completion:*' verbose yes
-zstyle ':completion:*:descriptions' format '%B%d%b'
-zstyle ':completion:*:messages' format '%d'
-zstyle ':completion:*:warnings' format 'No matches for: %d'
-zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
-zstyle ':completion:*' group-name ''
-
 # Include hidden files in completions
 setopt globdots
 
@@ -63,11 +41,12 @@ setopt auto_cd
 bindkey "${terminfo[khome]}" beginning-of-line
 bindkey "${terminfo[kend]}" end-of-line
 
+## Require marlonrichert/zsh-edit plugin
 # CTRL+ARROW to move by words
-bindkey "^[[1;5C" forward-word
-bindkey "^[[1;5D" backward-word
+bindkey "^[[1;5C" forward-subword
+bindkey "^[[1;5D" backward-subword
 # CTRL+BACKSPACE deletes whole word
-bindkey "^H" backward-delete-word
+bindkey "^H" backward-kill-subword
 
 # Bind UP/DOWN to search through history
 bindkey "^[[A" history-substring-search-up
@@ -79,11 +58,11 @@ export EDITOR=nvim
 # Aliases
 alias 's'='sudo -E '
 alias 'se'='sudoedit'
-alias 'p'='pacman'
-alias 'yS'='yay -S'
-alias 'yR'='yay -Rsc'
-alias 'gs'='git status'
-alias 'o'='xdg-open'
+alias 'p'='paru'
+alias 'pS'='paru -S'
+alias 'pR'='paru -Rsc'
+alias 'gs'='git status -u'
+alias 'o'='handlr open'
 alias 'e'='nvim'
 alias 'l'='exa --long --tree --level=2 --git --all'
 alias 'la'='exa --long --git --all'
@@ -92,11 +71,6 @@ alias 'less'='less -r'
 alias ff='fd . -type f -name'
 alias be='bundle exec'
 alias kc='kubectl'
-
-alias urldecode='python -c "import sys, urllib.parse as ul; \
-  print(ul.unquote_plus(sys.argv[1]))"'
-alias urlencode='python -c "import sys, urllib.parse as ul; \
-  print(ul.quote_plus(sys.argv[1]))"'
 
 bindkey -s '^[ ' 'xstarter\n'
 
@@ -108,30 +82,25 @@ function expand-alias() {
 zle -N expand-alias
 bindkey -M main ' ' expand-alias
 
+## Fuzzy finder
 export SKIM_DEFAULT_COMMAND="fd --hidden --exclude 'cache' --exclude '.git' . $HOME"
 export SKIM_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export SKIM_CTRL_T_OPTS="--preview='head -n10 {}'"
 export SKIM_ALT_C_COMMAND="fd --hidden --exclude '*cache*' --exclude '.git' -t d . $HOME"
 export SKIM_ALT_C_OPTS="--preview='exa --tree --level=2 --colour=always {}'"
+[ -f /usr/share/skim/completion.zsh ] && source /usr/share/skim/completion.zsh
+[ -f /usr/share/skim/key-bindings.zsh ] && source /usr/share/skim/key-bindings.zsh
 
 export GPG_TTY=$(tty)
 gpg-connect-agent updatestartuptty /bye >/dev/null
 
 eval `ssh-agent` >/dev/null
 
-# Git dotfiles
-# To setup on a new system:
-# git clone --bare https://github.com/tombh/dotfiles $HOME/Software/dotfiles
-# dotfiles checkout
-# dotfiles config status.showUntrackedFiles no
-alias dotfiles='/usr/bin/git --git-dir=$HOME/Software/dotfiles/ --work-tree=$HOME'
-
-# Rbenv
-export PATH="$HOME/.rbenv/bin:$PATH"
-which rbenv >/dev/null && eval "$(rbenv init -)"
-
 # Python poetry
 [ -f $HOME/.poetry/env ] && source $HOME/.poetry/env
+
+# __pycache__
+export PYTHONPYCACHEPREFIX=$HOME/.cache/pycache
 
 # Golang
 export GOPATH=~/.go
@@ -147,17 +116,18 @@ secrets=$HOME/Syncthing/SyncMisc/secrets.env
 [ -f $secrets ] && source $secrets
 
 # NVM/Node
-export NVM_DIR="$HOME/.nvm"
-#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-#[ -s "/usr/share/nvm/init-nvm.sh" ] && \. "/usr/share/nvm/init-nvm.sh"
-PATH=$PATH:./node_modules/.bin:$HOME/.config/yarn/global/node_modules/.bin
+export PATH=$PATH:./node_modules/.bin:$HOME/.config/yarn/global/node_modules/.bin/
+
+# Deno
+which deno >/dev/null && export DENO_VERSION=$(deno -V | cut -d " " -f 2)
+export PATH=$PATH:$HOME/.asdf/installs/deno/$DENO_VERSION/.deno/bin
 
 # All of the languages
 source $HOME/.asdf/asdf.sh
 
 # Kubectl plugins
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-export PATH=$PATH:~/.kube/plugins/jordanwilson230
+export PATH="$HOME/.kube/plugins/jordanwilson230:$PATH"
 
 # Kubectl completions
 source <(kubectl completion zsh)
@@ -171,8 +141,26 @@ export PATH="$HOME/.local/bin:$PATH"
 # User binaries
 export PATH="$HOME/bin:$PATH"
 
-# Fuzzy finder
-[ -f /usr/share/skim/completion.zsh ] && source /usr/share/skim/completion.zsh
-[ -f /usr/share/skim/key-bindings.zsh ] && source /usr/share/skim/key-bindings.zsh
+# Java / Android SDK
+export _JAVA_AWT_WM_NONREPARENTING=1
+export STUDIO_JDK=/usr/lib/jvm/java-14-openjdk
+export ANDROID_SDK_ROOT=~/Android/Sdk/
+export ANDROID_HOME=$ANDROID_SDK_ROOT
 
+# Set xterm option to enable CTRL-TAB, see:
+# https://github.com/alacritty/alacritty/issues/4451
+echo -e '\e[>4;1m'
+
+# It's best for tmux to set TERM=tmux for various reasons, but for eveyrthing else we
+# need this.
+export TERM=xterm-256color
+
+# Intelligent history search
+export MCFLY_DISABLE_MENU=TRUE
+eval "$(mcfly init zsh)"
+
+# Autojump paths
+eval "$(zoxide init zsh)"
+
+# Prompt
 eval "$(starship init zsh)"
