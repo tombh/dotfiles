@@ -1,0 +1,27 @@
+[character]
+success_symbol = "[](fg:#007cb1)"
+error_symbol = "[](fg:red)"
+
+[package]
+disabled = true
+
+[directory]
+style = "fg:#007cb1"
+
+[kubernetes]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[git_status]
+conflicted = "🏳"
+ahead = "⇡${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+behind = "⇣${count}"
+untracked = "🤷‍"
+stashed = "📦"
+modified = "📝"
+staged = '[++\($count\)](green)'
+renamed = "👅"
+deleted = "🗑"
