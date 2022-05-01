@@ -51,10 +51,10 @@ set -g history-limit 100000
 
 # Smart pane switching with awareness of Vim splits.
 # See: https://github.com/christoomey/vim-tmux-navigator
-bind-key -n M-Left  if-shell "$is_vim" "send-keys M-Left"  "select-pane -L"
-bind-key -n M-Down  if-shell "$is_vim" "send-keys M-Down"  "select-pane -D"
-bind-key -n M-Right if-shell "$is_vim" "send-keys M-Right" "select-pane -R"
-bind-key -n M-Up    if-shell "$is_vim" "send-keys M-Up"    "select-pane -U"
+bind-key -n M-Left  select-pane -L
+bind-key -n M-Down  select-pane -D
+bind-key -n M-Right select-pane -R
+bind-key -n M-Up    select-pane -U
 
 # Gotta bind the same nav keys for 'scroll' mode
 bind-key -T copy-mode-vi M-Left  select-pane -L

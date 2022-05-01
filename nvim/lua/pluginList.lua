@@ -46,7 +46,6 @@ return require("packer").startup({
 
 		-- misc
 		use("ojroques/vim-oscyank")
-		use("christoomey/vim-tmux-navigator")
 		use("sbdchd/neoformat")
 		use("nvim-lua/plenary.nvim")
 		use("tweekmonster/startuptime.vim")
