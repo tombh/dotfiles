@@ -72,15 +72,13 @@ alias ff='fd . -type f -name'
 alias be='bundle exec'
 alias kc='kubectl'
 
-bindkey -s '^[ ' 'xstarter\n'
-
-# Pressing SPACE after alias expands it
+# Pressing CTRL+SPACE after alias expands it
 function expand-alias() {
     zle _expand_alias
     zle self-insert
 }
 zle -N expand-alias
-bindkey -M main ' ' expand-alias
+bindkey '^[ ' expand-alias
 
 ## Fuzzy finder
 export SKIM_DEFAULT_COMMAND="fd --hidden --exclude 'cache' --exclude '.git' . $HOME"
