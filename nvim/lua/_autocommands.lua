@@ -37,3 +37,30 @@ local au = function(group)
 		end)
 	end
 end
+
+au("Startup")(function(autocmd)
+	autocmd("VimEnter", { pattern = "*" }, function()
+		if vim.bo.filetype == "gitcommit" then
+			return
+		end
+		if vim.bo.filetype ~= "" then
+			vim.api.nvim_command("NeoTreeShow")
+		else
+			-- Doesn't look like there's a file, so choose one
+			-- TODO: But files without extensions, for example, don't report a filetype 🤔
+			vim.api.nvim_command("NeoTreeFocus")
+		end
+	end)
+
+	autocmd("BufWritePre", { pattern = "*" }, function()
+		vim.api.nvim_command("StripWhitespace")
+	end)
+
+	-- Save indents as real tabs, but don't display as crazy long 8-width indents
+	autocmd("BufRead,BufNew", { pattern = "*" }, function()
+		vim.opt_local.expandtab = false
+		vim.opt_local.shiftwidth = 2
+		vim.opt_local.softtabstop = 2
+		vim.opt_local.tabstop = 2
+	end)
+end)

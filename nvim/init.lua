@@ -69,29 +69,12 @@ require("telescope-nvim")
 -- git signs , lsp symbols etc
 require("gitsigns-nvim")
 require("lspkind").init()
+require("_autocommands")
+
 -- Make navigating between vim and tmux panes consistent
 g.tmux_navigator_no_mappings = 1
 g.novim_mode_use_pane_controls = 0
 
-vim.api.nvim_exec(
-	[[
-		augroup fmt
-			autocmd!
-			autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()
-		augroup END
-
-		au BufNewFile,BufRead * setlocal noet ts=2 sw=2 sts=2
-
-		" Always try to place current line in centre when jumping
-		augroup restore_pos | au!
-			au BufWinEnter *
-				\ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
-				\ |   exe 'normal! g`"zz'
-				\ | endif
-		augroup end
-  ]],
-	false
-)
 g.neoformat_enabled_python = { "black" }
 
 g.better_whitespace_enabled = 1
