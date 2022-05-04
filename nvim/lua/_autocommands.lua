@@ -52,10 +52,6 @@ au("Startup")(function(autocmd)
 		end
 	end)
 
-	autocmd("BufWritePre", { pattern = "*" }, function()
-		vim.api.nvim_command("StripWhitespace")
-	end)
-
 	-- Save indents as real tabs, but don't display as crazy long 8-width indents
 	autocmd("BufRead,BufNew", { pattern = "*" }, function()
 		vim.opt_local.expandtab = false

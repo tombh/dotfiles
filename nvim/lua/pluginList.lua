@@ -15,9 +15,9 @@ return require("packer").startup({
 		-- lsp stuff
 		use("nvim-treesitter/nvim-treesitter")
 		use("neovim/nvim-lspconfig")
-		use("williamboman/nvim-lsp-installer")
 		use("jose-elias-alvarez/null-ls.nvim")
 		use("onsails/lspkind-nvim")
+		use("lukas-reineke/lsp-format.nvim")
 
 		-- completion stuff
 		use("hrsh7th/cmp-nvim-lsp")
