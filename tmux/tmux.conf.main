@@ -1,5 +1,5 @@
-if "test ! -d ~/.tmux/plugins/tpm" \
-   "run 'git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm && ~/.tmux/plugins/tpm/bin/install_plugins'"
+if "test ! -d ~/.config/tmux/plugins/tpm" \
+   "run 'git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm && ~/.config/tmux/plugins/tpm/bin/install_plugins'"
 
 # List of plugins
 set -g @plugin 'tmux-plugins/tpm'
@@ -125,12 +125,12 @@ bind -n M-z resize-pane -Z
 
 set -g @continuum-restore 'on'
 set -g @resurrect-capture-pane-contents 'on'
-set -g @resurrect-processes 'nvim htop btm "sudo nethogs -C" tail "sampler --config ~/.config/sampler.yml"'
-
-if-shell '[[ $(tmux list-sessions | wc -l ) -eq 0 ]]' 'run-shell $HOME/.tmux/plugins/tmux-resurrect/scripts/restore.sh'
+set -g @resurrect-processes 'nvim htop btm tail "sudo bandwhich" "sampler --config ~/.config/sampler.yml"'
+set -g @resurrect-dir '~/.config/tmux/resurrect'
+if-shell '[[ $(tmux list-sessions | wc -l ) -eq 0 ]]' 'run-shell $HOME/.config/tmux/plugins/tmux-resurrect/scripts/restore.sh'
 
 bind-key R source-file ~/.config/tmux/tmux.conf \; display-message "~/.config/tmux/tmux.conf reloaded"
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
-run '~/.tmux/plugins/tpm/tpm'
+run '~/.config/tmux/plugins/tpm/tpm'
 
