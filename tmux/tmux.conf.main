@@ -1,6 +1,12 @@
 if "test ! -d ~/.config/tmux/plugins/tpm" \
    "run 'git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm && ~/.config/tmux/plugins/tpm/bin/install_plugins'"
 
+# Unbind ALL keybindings whilst REBINDING defaults
+run-shell '\
+    export f=$(mktemp) \
+    && tmux -f /dev/null -L temp start-server \; list-keys > $f \
+    && tmux unbind -a \; source-file $f'
+
 # List of plugins
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
