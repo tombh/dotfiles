@@ -147,7 +147,7 @@ export ANDROID_HOME=$ANDROID_SDK_ROOT
 
 # Set xterm option to enable CTRL-TAB, see:
 # https://github.com/alacritty/alacritty/issues/4451
-echo -e '\e[>4;1m'
+echo -ne '\e[>4;1m'
 
 # It's best for tmux to set TERM=tmux for various reasons, but for eveyrthing else we
 # need this.
