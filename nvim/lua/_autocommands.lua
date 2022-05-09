@@ -44,11 +44,15 @@ au("Startup")(function(autocmd)
 			return
 		end
 		if vim.bo.filetype ~= "" then
-			vim.api.nvim_command("NeoTreeShow")
+			if vim.fn.winwidth('%') > 120 then
+				vim.api.nvim_command("NeoTreeShow")
+			end
 		else
-			-- Doesn't look like there's a file, so choose one
-			-- TODO: But files without extensions, for example, don't report a filetype 🤔
-			vim.api.nvim_command("NeoTreeFocus")
+			if vim.fn.winwidth('%') > 120 then
+				-- Doesn't look like there's a file, so choose one
+				-- TODO: But files without extensions, for example, don't report a filetype 🤔
+				vim.api.nvim_command("NeoTreeFocus")
+			end
 		end
 	end)
 
