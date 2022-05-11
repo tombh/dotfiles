@@ -54,6 +54,13 @@ _G.keymap = function(key, main_command, selection_command)
 	)
 end
 
+function _G.buffer_switch_mru()
+	vim.cmd("b #")
+end
+
+_G.keymap("<C-Tab>", "lua buffer_switch_mru()")
+_G.keymap("<C-t>", "enew")
+
 _G.keymap("<C-C>", "OSCYank")
 
 _G.keymap("<S-M-Left>", "<C-W><Left>")

@@ -1,4 +1,3 @@
-local cmd = vim.cmd
 local g = vim.g
 local fn = vim.fn
 
@@ -21,34 +20,41 @@ if is_github_theme_loaded then
 		transparent = true,
 	})
 end
-require("custom_highlights")
 
-require("pluginList")
+require("_plugins")
 if Packer_bootstrap then
 	require("packer").sync()
 end
 
-vim.notify = require("notify").setup({
+vim.notify = require("notify")
+vim.notify.setup({
+	-- TODO: use colour name from _highlights.lua
 	background_colour = "#1e222a"
 })
 
-require("file-icons")
-require("mappings")
-require("misc-utils")
-require("statusline")
-require("autopairs")
-require("zenmode-nvim")
+require("_highlights")
+require("_icon_overrides")
+require("_mappings")
+require("_misc-utils")
+require("_statusline")
+require("_autopairs")
+require("_zenmode")
+require("_neo-tree")
+require("_treesitter")
+require("_telescope")
+require("_autocommands")
+require("_gitsigns")
 
 require("colorizer").setup()
 require("neoscroll").setup()
 require("Comment").setup()
 
 -- lsp stuff
-require("nvim-lspconfig")
-require("null-ls-nvim")
-require("cmp-completion")
-
-require("_neo-tree")
+require("lsp-format").setup()
+require("lspkind").init()
+require("_lspconfig")
+require("_null-ls")
+require("_cmp-completion")
 
 g.auto_save = 0
 
@@ -77,13 +83,3 @@ g.minimap_highlight_range = 1
 g.minimap_highlight_search = 1
 g.minimap_git_colors = 1
 g.minimap_width = 8
-
-function _G.buffer_switch_mru()
-	vim.cmd("b #")
-end
-
-_G.keymap("<C-Tab>", "lua buffer_switch_mru()")
-_G.keymap("<C-t>", "enew")
-
-vim.cmd("set wrap!")
--- vim.api.nvim_set_option("wrap", false)
