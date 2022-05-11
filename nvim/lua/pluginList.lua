@@ -71,6 +71,7 @@ return require("packer").startup({
 		use("alvan/vim-closetag")
 		use("rcarriga/nvim-notify")
 		use("wfxr/minimap.vim")
+		use("tpope/vim-sleuth")
 
 	end,
 	config = {
