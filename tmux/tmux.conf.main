@@ -18,14 +18,8 @@ set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 source-file ~/.config/tmux/theme.conf
 
 set -g default-terminal "tmux"
-set -g set-clipboard external
-# This applies to the *host* $TERM. With clever hack to support OC52 anywhere clipboard copy
-set-option -ag terminal-overrides ",xterm-256color:Ms=\\E]52;c;%p2%s\\7"
-set -ag terminal-overrides "vte*:XT:Ms=\\E]52;c;%p2%s\\7,xterm*:XT:Ms=\\E]52;c;%p2%s\\7"
+set -g set-clipboard on
 set -ga terminal-overrides ",xterm-256color:RGB"
-
-set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'  # undercurl support
-set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # underscore colours - needs tmux-3.0
 
 set -ga terminal-features "sync"
 

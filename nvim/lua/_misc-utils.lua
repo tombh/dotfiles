@@ -43,6 +43,32 @@ opt("o",
 	'tab:——,eol:↲,nbsp:␣,trail: ,extends:⟩,precedes:⟨'
 )
 
+-- Automaticay output all clipboard actions to OSC52
+-- Thanks @kabouzeid ❤
+-- https://github.com/ojroques/vim-oscyank/issues/24#issuecomment-1098406019
+local function copy(lines, _)
+	vim.fn.OSCYankString(table.concat(lines, "\n"))
+end
+
+local function paste()
+	return {
+		vim.fn.split(vim.fn.getreg(''), '\n'),
+		vim.fn.getregtype('')
+	}
+end
+
+vim.g.clipboard = {
+	name = "osc52",
+	copy = {
+		["+"] = copy,
+		["*"] = copy
+	},
+	paste = {
+		["+"] = paste,
+		["*"] = paste
+	}
+}
+
 local M = {}
 
 function M.is_buffer_empty()
