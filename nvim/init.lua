@@ -80,7 +80,11 @@ g.neoformat_enabled_python = { "black" }
 g.better_whitespace_enabled = 1
 g.strip_only_modified_lines = 1
 
-vim.cmd("autocmd BufWritePre * :StripWhitespace")
+g.minimap_auto_start = 1
+g.minimap_highlight_range = 1
+g.minimap_highlight_search = 1
+g.minimap_git_colors = 1
+g.minimap_width = 8
 
 function _G.buffer_switch_mru()
 	vim.cmd("b #")

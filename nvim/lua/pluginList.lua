@@ -70,6 +70,7 @@ return require("packer").startup({
 		use("windwp/nvim-autopairs")
 		use("alvan/vim-closetag")
 		use("rcarriga/nvim-notify")
+		use("wfxr/minimap.vim")
 
 	end,
 	config = {
