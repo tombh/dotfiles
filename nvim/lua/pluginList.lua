@@ -1,6 +1,10 @@
 local packer = require("packer")
 local use = packer.use
 
+require 'packer'.init({
+	max_jobs = 5
+})
+
 return require("packer").startup({
 	function()
 		use("wbthomason/packer.nvim")
