@@ -52,7 +52,10 @@ end
 local servers = {
 	'rust_analyzer',
 	'sumneko_lua',
-	'bashls'
+	'bashls',
+	'denols',
+	'solargraph',
+	'pylsp'
 }
 for _, server in pairs(servers) do
 	local capabilities = require("cmp_nvim_lsp").update_capabilities(
