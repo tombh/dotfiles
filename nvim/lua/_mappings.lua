@@ -23,6 +23,12 @@ _G.keymap = function(key, main_command, selection_command)
 		command,
 		{ noremap = true, silent = true }
 	)
+	vim.api.nvim_set_keymap(
+		"c",
+		key,
+		command,
+		{ noremap = true, silent = true }
+	)
 
 	if selection_command then
 		main_command = selection_command
@@ -64,5 +70,6 @@ _G.keymap("<C-w>", "call novim_mode#ClosePane()")
 _G.keymap("<M-h>", 'lua require"gitsigns".stage_hunk()')
 _G.keymap("<M-H>", 'lua require"gitsigns".reset_hunk()')
 
+-- Jump history navigation
 _G.keymap("<M-,>", 'exec "normal \\<C-o>"')
 _G.keymap("<M-.>", 'exec "normal 1 \\<C-i>"')
