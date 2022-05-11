@@ -19,6 +19,9 @@ local darker_black = "#0f0f0f"
 local blue = "#61afef"
 local green = "#A3BE8C"
 
+fg("NonText", '#111111')
+fg("IndentBlanklineIndent", '#111111')
+
 fg_bg("VertSplit", darker_black, "bg")
 bg("CursorLine", black2)
 

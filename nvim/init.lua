@@ -52,24 +52,16 @@ require("_neo-tree")
 
 g.auto_save = 0
 
--- colorscheme related stuff
-cmd("syntax on")
-
-g.indentLine_enabled = 1
-g.indent_blankline_char = "▏"
-
-g.indent_blankline_filetype_exclude = { "help", "terminal" }
-g.indent_blankline_buftype_exclude = { "terminal" }
-g.indent_blankline_show_trailing_blankline_indent = false
-g.indent_blankline_show_first_indent_level = false
-
-require("treesitter-nvim")
-require("telescope-nvim")
-
--- git signs , lsp symbols etc
-require("gitsigns-nvim")
-require("lspkind").init()
-require("_autocommands")
+require("indent_blankline").setup {
+	space_char_blankline      = " ",
+	show_first_indent_level   = false,
+	char_highlight_list       = {
+		"IndentBlanklineIndent",
+	},
+	space_char_highlight_list = {
+		"IndentBlanklineIndent",
+	},
+}
 
 -- Make navigating between vim and tmux panes consistent
 g.tmux_navigator_no_mappings = 1
