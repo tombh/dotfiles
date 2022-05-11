@@ -56,7 +56,13 @@ au("Startup")(function(autocmd)
 		end
 	end)
 
+	autocmd("FocusGained", { pattern = "*" }, function()
+		require("neo-tree.sources.manager").refresh("filesystem")
+		require("neo-tree.events").fire_event("git_event")
+	end)
+
 	-- Save indents as real tabs, but don't display as crazy long 8-width indents
+	-- Though defers to vim-sleuth first
 	autocmd("BufRead,BufNew", { pattern = "*" }, function()
 		vim.opt_local.expandtab = false
 		vim.opt_local.shiftwidth = 2
