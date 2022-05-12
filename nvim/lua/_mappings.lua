@@ -80,3 +80,27 @@ _G.keymap("<M-H>", 'lua require"gitsigns".reset_hunk()')
 -- Jump history navigation
 _G.keymap("<M-,>", 'exec "normal \\<C-o>"')
 _G.keymap("<M-.>", 'exec "normal 1 \\<C-i>"')
+
+require 'nvim-treesitter.configs'.setup {
+	incremental_selection = {
+		enable = true
+	},
+}
+
+function _G.t(str)
+	return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+function _G.select_object()
+	vim.api.nvim_command('behave mswin')
+	require('nvim-treesitter.incremental_selection').init_selection()
+	vim.cmd(t('normal <C-G><S-Right>'))
+end
+
+function _G.inc_selection()
+	vim.cmd(t('normal <C-G>'))
+	require('nvim-treesitter.incremental_selection').node_incremental()
+	vim.cmd(t('normal <C-G><S-Right>'))
+end
+
+_G.keymap("<C-d>", "lua select_object()", "lua inc_selection()")
