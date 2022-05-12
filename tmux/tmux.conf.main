@@ -1,11 +1,14 @@
-if "test ! -d ~/.config/tmux/plugins/tpm" \
-   "run 'git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm && ~/.config/tmux/plugins/tpm/bin/install_plugins'"
+base_path="$HOME/.config/tmux"
+
+setenv -g TMUX_PLUGIN_MANAGER_PATH "$base_path/plugins/"
 
 # Unbind ALL keybindings whilst REBINDING defaults
 run-shell '\
     export f=$(mktemp) \
     && tmux -f /dev/null -L temp start-server \; list-keys > $f \
     && tmux unbind -a \; source-file $f'
+# Reload tmux config
+bind-key R source-file $base_path/tmux.conf \; display-message "$base_path/tmux.conf reloaded"
 
 # List of plugins
 set -g @plugin 'tmux-plugins/tpm'
@@ -15,7 +18,10 @@ set -g @plugin 'tmux-plugins/tmux-continuum'
 set -g @plugin 'tmux-plugins/tmux-open'
 set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 
-source-file ~/.config/tmux/theme.conf
+if "test ! -d $base_path/plugins/tpm" \
+   "run 'git clone https://github.com/tmux-plugins/tpm $base_path/plugins/tpm && $base_path/plugins/tpm/bin/install_plugins'"
+
+source-file "$base_path/theme.conf"
 
 set -g default-terminal "tmux"
 set -g set-clipboard on
@@ -123,11 +129,11 @@ bind -n M-z resize-pane -Z
 set -g @continuum-restore 'on'
 set -g @resurrect-capture-pane-contents 'on'
 set -g @resurrect-processes 'nvim htop btm tail "sudo bandwhich" "sampler --config ~/.config/sampler.yml"'
-set -g @resurrect-dir '~/.config/tmux/resurrect'
-if-shell '[[ $(tmux list-sessions | wc -l ) -eq 0 ]]' 'run-shell $HOME/.config/tmux/plugins/tmux-resurrect/scripts/restore.sh'
+set -g @resurrect-dir "$base_path/resurrect"
 
-bind-key R source-file ~/.config/tmux/tmux.conf \; display-message "~/.config/tmux/tmux.conf reloaded"
+# This version of booting ressurect works for `tmux start-server` as well. Which is nice for starting
+# tmux in the backgrounda at boot.
+run -b "$base_path/plugins/tmux-resurrect/scripts/restore.sh r"
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
-run '~/.config/tmux/plugins/tpm/tpm'
-
+run "$base_path/plugins/tpm/tpm"
