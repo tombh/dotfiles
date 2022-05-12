@@ -30,9 +30,6 @@ is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
 # The main shortcut to access all tmux's commands
 set-option -g prefix C-a
 
-# Lets me use Shift+Arrow keys in vim
-set-window-option -g xterm-keys on
-
 # Mouse support. Clicking in panes to switch to them, etc
 set -g mouse on
 
