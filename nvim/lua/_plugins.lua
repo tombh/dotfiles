@@ -21,7 +21,6 @@ return require("packer").startup({
 		use("neovim/nvim-lspconfig")
 		use("jose-elias-alvarez/null-ls.nvim")
 		use("onsails/lspkind-nvim")
-		use("lukas-reineke/lsp-format.nvim")
 
 		-- completion stuff
 		use("hrsh7th/cmp-nvim-lsp")

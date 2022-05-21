@@ -12,7 +12,6 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 })
 
 local function on_attach(client, bufnr)
-	require("lsp-format").on_attach(client)
 
 	local function buf_set_keymap(...)
 		vim.api.nvim_buf_set_keymap(bufnr, ...)
@@ -87,6 +86,30 @@ for _, server in pairs(servers) do
 
 	require('lspconfig')[server].setup(opts)
 end
+
+local null_ls = require("null-ls")
+null_ls.setup({
+	sources = {
+		null_ls.builtins.diagnostics.shellcheck,
+		null_ls.builtins.diagnostics.luacheck,
+		null_ls.builtins.code_actions.shellcheck,
+		null_ls.builtins.formatting.shellharden,
+		null_ls.builtins.formatting.shfmt,
+		null_ls.builtins.formatting.stylua,
+		null_ls.builtins.code_actions.gitsigns,
+	},
+	update_in_insert = true,
+})
+
+vim.api.nvim_create_user_command("FormatEnable", function()
+	vim.b._formatting_disabled = false
+	vim.notify("Auto-formatting enabled for buffer")
+end, {})
+
+vim.api.nvim_create_user_command("FormatDisable", function()
+	vim.b._formatting_disabled = true
+	vim.notify("Auto-formatting disabled for buffer")
+end, {})
 
 -- replace the default lsp diagnostic letters with prettier symbols
 local function lspSymbol(name, icon)

@@ -69,4 +69,10 @@ au("Startup")(function(autocmd)
 		vim.opt_local.softtabstop = 2
 		vim.opt_local.tabstop = 2
 	end)
+
+	autocmd("BufWritePre", { pattern = "*" }, function()
+		if vim.b._formatting_disabled ~= true then
+			vim.lsp.buf.format({ async = false })
+		end
+	end)
 end)

@@ -50,7 +50,6 @@ require("neoscroll").setup()
 require("Comment").setup()
 
 -- lsp stuff
-require("lsp-format").setup()
 require("lspkind").init()
 require("_lspconfig")
 require("_null-ls")
