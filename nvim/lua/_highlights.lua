@@ -1,3 +1,23 @@
+local is_github_theme_loaded, _ = pcall(require, "github-theme")
+if is_github_theme_loaded then
+  require("github-theme").setup({
+    theme_style = "dimmed",
+    transparent = true,
+    overrides = function(c)
+      return {
+        DiffAdd = {
+          bg = c.diff.add,
+        },
+        DiffChange = {},
+        DiffDelete = {
+          bg = c.diff.delete,
+        },
+        DiffText = { bg = c.diff.change },
+      }
+    end,
+  })
+end
+
 local cmd = vim.cmd
 
 local bg = function(group, col)
@@ -23,6 +43,9 @@ fg("NonText", '#111111')
 fg("IndentBlanklineIndent", '#111111')
 
 fg_bg("VertSplit", darker_black, "bg")
+fg_bg("FoldColumn", black3, "bg")
+fg_bg("Folded", black3, "bg")
+
 bg("CursorLine", black2)
 
 -- Telescope

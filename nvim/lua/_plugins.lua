@@ -47,6 +47,7 @@ return require("packer").startup({
 		use("nvim-telescope/telescope.nvim")
 		use("nvim-lua/popup.nvim")
 		use("nvim-telescope/telescope-ui-select.nvim")
+		use({ "sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim" })
 
 		-- misc
 		use("ojroques/vim-oscyank")
