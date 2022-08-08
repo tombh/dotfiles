@@ -84,7 +84,15 @@ for _, server in pairs(servers) do
 		}
 	end
 
-	require('lspconfig')[server].setup(opts)
+	if server == "rust_analyzer" then
+		opts.settings = {
+			["rust-analyzer"] = {
+				checkOnSave = { command = "clippy" },
+			},
+		}
+	end
+
+	require("lspconfig")[server].setup(opts)
 end
 
 local null_ls = require("null-ls")
