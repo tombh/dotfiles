@@ -15,7 +15,6 @@ env:
 # (changes require restart)
 window:
   decorations: none
-  startup_mode: Maximized
 
 # When true, bold text is drawn using the bright variant of colors.
 draw_bold_text_with_bright_colors: true
@@ -28,20 +27,8 @@ font:
     # Style can be specified to pick a specific face.
     style: Regular
 
-  # The bold font face
-  bold:
-    family: SauceCodePro Nerd Font
-    # Style can be specified to pick a specific face.
-    style: Bold
-
-  # The italic font face
-  italic:
-    family: SauceCodePro Nerd Font
-    #Style can be specified to pick a specific face.
-    style: Italic
-
   # Point size of the font
-  size: 11.2
+  size: 11.0
 
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.
@@ -116,12 +103,11 @@ bell:
 # (e.g. "\x1b[5~") is? Open another terminal (like xterm) without tmux,
 # then run `showkey -a` to get the sequence associated to a key combination.
 key_bindings:
-  - { key: V,        mods: Control, action: Paste          }
-  - { key: C,        mods: Control|Shift,         action: Copy           }
+  - { key: V,        mods: Control,       action: Paste                  }
+  - { key: C,        mods: Control|Shift, action: Copy                   }
   - { key: Q,        mods: Command, action: Quit                         }
-  - { key: W,        mods: Command, action: Quit                         }
-  - { key: Equals,   mods: Control, action: IncreaseFontSize }
-  - { key: Comma,    mods: Control, action: DecreaseFontSize }
+  - { key: Equals,   mods: Control, action: IncreaseFontSize             }
+  - { key: Comma,    mods: Control, action: DecreaseFontSize             }
   - { key: Insert,   mods: Shift,   action: PasteSelection               }
   - { key: Home,     mods: Alt,     chars: "\x1b[1;3H",                  }
   - { key: Home,     mods: Shift,   chars: "\x1b[1;2H",mode: AppCursor   }
@@ -179,6 +165,13 @@ key_bindings:
   - { key: Back,     mods: Alt,     chars: "\x1b\x7f"                    }
   - { key: Insert,                  chars: "\x1b[2~"                     }
   - { key: Delete,                  chars: "\x1b[3~"                     }
+  - { key: A, mods: Control|Shift,  chars: "\x1b[65;6u"                  }
+  - { key: D, mods: Control|Shift,  chars: "\x1b[68;6u"                  }
+  - { key: E, mods: Control|Shift,  chars: "\x1b[69;6u"                  }
+  - { key: J, mods: Control|Shift,  chars: "\x1b[74;6u"                  }
+
+import:
+  - ./extended-keys.yaml
 
 # Mouse bindings
 #
@@ -218,12 +211,12 @@ selection:
 colors:
   # Default colors
   primary:
-    background: '#22272e'
-    foreground: '#bcc8d4'
+    background: '#0e0d15' # @tombh
+    foreground: '#bcc8d4' # @tombh
 
   # Normal colors
   normal:
-    black:   '#0e0d15' # I chose this one
+    black:   '#0e0d15' # @tombh
     red:     '#f47067'
     green:   '#57ab5a'
     yellow:  '#c69026'

@@ -17,6 +17,7 @@ set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
 set -g @plugin 'tmux-plugins/tmux-open'
 set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
+set -g @plugin 'fcsonline/tmux-thumbs'
 
 if "test ! -d $base_path/plugins/tpm" \
    "run 'git clone https://github.com/tmux-plugins/tpm $base_path/plugins/tpm && $base_path/plugins/tpm/bin/install_plugins'"
@@ -25,13 +26,24 @@ source-file "$base_path/theme.conf"
 
 set -g default-terminal "tmux"
 set -g set-clipboard on
+
+# What's this for?
 set -ga terminal-overrides ",xterm-256color:RGB"
 
 set -ga terminal-features "sync"
 
+# I think this forces the client window size to be the biggest one
+set -g window-size latest
+setw -g aggressive-resize on
+
 # Detects whether Vim is currently loaded
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
     | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+
+# Hmm 🙄 Needed for Home/End in Neovim
+# See: https://github.com/neovim/neovim/issues/6134#issuecomment-758475291
+bind-key -n Home send Escape "OH"
+bind-key -n End send Escape "OF"
 
 # The main shortcut to access all tmux's commands
 set-option -g prefix C-a
@@ -130,6 +142,8 @@ set -g @continuum-restore 'on'
 set -g @resurrect-capture-pane-contents 'on'
 set -g @resurrect-processes 'nvim htop btm tail "sudo bandwhich" "sampler --config ~/.config/sampler.yml"'
 set -g @resurrect-dir "$base_path/resurrect"
+
+set -g @thumbs-osc52 1
 
 # This version of booting ressurect works for `tmux start-server` as well. Which is nice for starting
 # tmux in the backgrounda at boot.

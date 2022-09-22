@@ -14,6 +14,9 @@ disabled = true
 [gcloud]
 disabled = true
 
+[aws]
+disabled = true
+
 [git_status]
 conflicted = "🏳"
 ahead = "⇡${count}"
