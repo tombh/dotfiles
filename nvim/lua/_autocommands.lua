@@ -39,19 +39,26 @@ local au = function(group)
 end
 
 au("Startup")(function(autocmd)
-	autocmd("VimEnter", { pattern = "*" }, function()
+	autocmd("UIEnter", { pattern = "*" }, function()
 		if vim.bo.filetype == "gitcommit" then
 			return
 		end
+
+		-- The `vim.schedule` gives neo-tree a moment to set itself up to not be identified as
+		-- a normal text file.
 		if vim.bo.filetype ~= "" then
-			if vim.fn.winwidth('%') > 120 then
-				vim.api.nvim_command("NeoTreeShow")
+			if vim.fn.winwidth("%") > 120 then
+				vim.schedule(function()
+					vim.api.nvim_command("Neotree show")
+				end)
 			end
 		else
-			if vim.fn.winwidth('%') > 120 then
+			if vim.fn.winwidth("%") > 120 then
 				-- Doesn't look like there's a file, so choose one
 				-- TODO: But files without extensions, for example, don't report a filetype 🤔
-				vim.api.nvim_command("NeoTreeFocus")
+				vim.schedule(function()
+					vim.api.nvim_command("Neotree focus")
+				end)
 			end
 		end
 	end)
@@ -63,7 +70,7 @@ au("Startup")(function(autocmd)
 
 	-- Save indents as real tabs, but don't display as crazy long 8-width indents
 	-- Though defers to vim-sleuth first
-	autocmd("BufRead,BufNew", { pattern = "*" }, function()
+	autocmd("BufRead", { pattern = "*" }, function()
 		vim.opt_local.expandtab = false
 		vim.opt_local.shiftwidth = 2
 		vim.opt_local.softtabstop = 2
@@ -72,7 +79,24 @@ au("Startup")(function(autocmd)
 
 	autocmd("BufWritePre", { pattern = "*" }, function()
 		if vim.b._formatting_disabled ~= true then
-			vim.lsp.buf.format({ async = false })
+			vim.lsp.buf.format({
+				async = false,
+				timeout_ms = 10000,
+				filter = function(client)
+					-- Never use Typescript LSP to format, rely on Prettier instead
+					return client.name ~= "tsserver"
+				end,
+			})
 		end
+	end)
+
+	autocmd("BufEnter", { pattern = "*" }, function()
+		if vim.bo.filetype ~= "neo-tree" then
+			vim.api.nvim_command("EnableWhitespace")
+		end
+	end)
+
+	autocmd("BufLeave", { pattern = "*" }, function()
+		vim.api.nvim_command("DisableWhitespace")
 	end)
 end)

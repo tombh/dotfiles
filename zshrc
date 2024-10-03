@@ -73,27 +73,69 @@ bindkey "^[[A" history-substring-search-up
 bindkey "^[[B" history-substring-search-down
 
 export XDG_CONFIG_HOME=$HOME/.config
-export EDITOR=nvim
 
 # Aliases
-alias 's'='sudo -E '
+alias 'rm'='rm -I'
+alias 's'='sudo -E'
 alias 'se'='sudoedit'
+
 alias 'p'='paru'
 alias 'pS'='paru -S'
 alias 'pR'='paru -Rsc'
 alias 'pU'='tbx pacman_update'
+
+alias 'dI'='sudo dnf install -y'
+alias 'dR'='sudo dnf remove'
+alias 'dU'='sudo dnf upgrade --refresh'
+
+alias 'nI'='nix-env --install --attr'
+alias 'nR'='nix-env --uninstall'
+alias 'nU'='nix-env --upgrade'
+
 alias 'gs'='git status -u'
 alias 'o'='handlr open'
 alias 'e'='nvim'
-alias 'la'='exa --long --git --all --group'
-alias 'lat'='exa --long --tree --level=2 --git --all'
-alias 'lad'='la --sort modified'
+alias 'la'='
+	lsd \
+		--blocks date,user,size,name \
+		--group-dirs first \
+		--date relative \
+		--sort time \
+		--reverse\
+		--almost-all'
+alias 'laa'='lsd --long --git --almost-all'
+alias 'lad'='la --sort time'
 alias 'las'='la --sort size'
-alias 'lg'='exa --grid'
 alias 'less'='less -r'
 alias ff='fd . -type f -name'
 alias be='bundle exec'
 alias kc='kubectl'
+alias grbim='~/bin/tbx git_rebase_interactive_detect_base'
+
+
+function gbn {
+	branch_name=$1
+	git checkout -B "$branch_name" main
+}
+
+function ghcopr {
+	export GH_FORCE_TTY=100%
+	gh pr list | \
+		fzf \
+			--ansi \
+			--preview 'gh pr view {1}' \
+			--preview-window down --header-lines 3 |
+		awk '{print $1}' |
+		xargs gh pr checkout
+}
+
+function gcofz {
+	git branch \
+		--sort=-committerdate | \
+		grep -v '^\*' | \
+		fzf --reverse --info=inline | \
+		xargs git checkout
+}
 
 # Pressing CTRL+SPACE after alias expands it
 function expand-alias() {
@@ -103,88 +145,26 @@ function expand-alias() {
 zle -N expand-alias
 bindkey '^[ ' expand-alias
 
-## Fuzzy finder
-export SKIM_DEFAULT_COMMAND="
-	fd \
-		--hidden \
-		--exclude '*cache*' \
-		--exclude '.go/' \
-		--exclude '.gradle/' \
-		--exclude '.local' \
-		--exclude '.git' \
-		--exclude 'Downloads/asus_backup' \
-		. $HOME
-"
-export SKIM_CTRL_T_COMMAND="$SKIM_DEFAULT_COMMAND"
-export SKIM_CTRL_T_OPTS="
-	--bind ?:toggle-preview \
-	--keep-right \
-	--preview='(basename {}; head -n15 {}) || exa --tree --level=3 {}'
-"
-export SKIM_ALT_C_COMMAND="fd --exclude '*cache*' --exclude '.git' -t d . $HOME"
-export SKIM_ALT_C_OPTS="--preview='exa --tree --level=2 --colour=always {}'"
-[ -f /usr/share/skim/completion.zsh ] && source /usr/share/skim/completion.zsh
-[ -f /usr/share/skim/key-bindings.zsh ] && source /usr/share/skim/key-bindings.zsh
-bindkey '^[^r' skim-history-widget
+export FZF_CTRL_T_OPTS="
+	--preview 'bat -n --color=always {}'
+	--bind 'ctrl-/:change-preview-window(down|hidden|)'"
+
+FZF_ALT_C_COMMAND="atuin search --format "{directory}" | rg -v "^unknown" | sort | uniq"
+FZF_ALT_C_OPTS="--preview 'lsd --color always --tree {}'"
+
+[ -f /usr/share/fzf/shell/key-bindings.zsh ] && source /usr/share/fzf/shell/key-bindings.zsh
+[ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
 
 ATUIN_NOBIND=1
-eval "$(atuin init zsh)"
+eval "$(atuin init zsh --disable-up-arrow)"
 bindkey '^r' _atuin_search_widget
 
-export GPG_TTY=$(tty)
-gpg-connect-agent updatestartuptty /bye >/dev/null
+# Multi-user (currently on remote Debian)
+if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+	. '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+fi
 
-# Python poetry
-[ -f $HOME/.poetry/env ] && source $HOME/.poetry/env
-
-# __pycache__
-export PYTHONPYCACHEPREFIX=$HOME/.cache/pycache
-
-# Golang
-export GOPATH=~/.go
-export GOBIN=~/.go/bin
-export PATH=$PATH:$GOBIN
-
-# Rust
-[ -f $HOME/.cargo/env ] && source $HOME/.cargo/env
-export PATH="$HOME/.cargo/bin/:$PATH"
-
-# Personal
-secrets=$HOME/Syncthing/SyncMisc/secrets.env
-[ -f $secrets ] && source $secrets
-
-# NVM/Node
-export PATH=$PATH:./node_modules/.bin:
-
-# Deno
-which deno >/dev/null && export DENO_VERSION=$(deno -V | cut -d " " -f 2)
-local deno_path="$HOME/.asdf/installs/deno/$DENO_VERSION/.deno/bin"
-[ -f "$deno_path" ] && export PATH=$PATH:$deno_path
-
-# All of the languages
-source /opt/asdf-vm/asdf.sh
-
-# Kubectl plugins
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
-export PATH="$HOME/.kube/plugins/jordanwilson230:$PATH"
-
-# Kubectl completions
-which kubectl >/dev/null && source <(kubectl completion zsh)
-
-# Record history in Erlang REPL
-export ERL_AFLAGS="-kernel shell_history enabled"
-
-# Python pip
-export PATH="$HOME/.local/bin:$PATH"
-
-# User binaries
-export PATH="$HOME/bin:$PATH"
-
-# Java / Android SDK
-export _JAVA_AWT_WM_NONREPARENTING=1
-export STUDIO_JDK=/usr/lib/jvm/java-14-openjdk
-export ANDROID_SDK_ROOT=~/Android/Sdk/
-export ANDROID_HOME=$ANDROID_SDK_ROOT
+export EDITOR=$(which nvim)
 
 # timg TTY image viewer: display images with correct aspect ratio on remote server
 if [[ $(cat /etc/hostname) = "remote-box" ]]; then
@@ -194,10 +174,6 @@ fi
 # Set xterm option to enable CTRL-TAB, see:
 # https://github.com/alacritty/alacritty/issues/4451
 echo -ne '\e[>4;1m'
-
-# It's best for tmux to set TERM=tmux for various reasons, but for eveyrthing else we
-# need this.
-export TERM=xterm-256color
 
 # This script was automatically generated by the broot program
 # More information can be found in https://github.com/Canop/broot
@@ -211,7 +187,7 @@ function br {
 	if broot --outcmd "$cmd_file" "$@"; then
 		cmd=$(<"$cmd_file")
 		rm -f "$cmd_file"
-		eval "$cmd"
+		EDITOR=vi eval "$cmd"
 	else
 		code=$?
 		rm -f "$cmd_file"
@@ -221,32 +197,11 @@ function br {
 zle -N br
 bindkey '^b' br
 
-# Autojump paths
-eval "$(zoxide init zsh)"
-
-function zoxide_sk() {
-	\builtin local result
-		result="$( \
-		zoxide query -ls -- "$@" \
-		| sk \
-			--delimiter='[^\t\n ][\t\n ]+' \
-			-n2.. \
-			--no-sort \
-			--keep-right \
-			--height='40%' \
-			--layout='reverse' \
-			--exit-0 \
-			--select-1 \
-			--bind='ctrl-z:ignore' \
-			--preview='\command -p ls -F --color=always {2..}' \
-		;
-	)" && __zoxide_cd "${result:5}"
-}
-zle -N zoxide_sk
-bindkey '^g' zoxide_sk
-
 # Prompt
 eval "$(starship init zsh)"
+
+# Rye Python and Python packages manager
+source "$HOME/.rye/env"
 
 if [[ -n $ONEOFF ]]; then
 	eval "$ONEOFF"
@@ -254,3 +209,5 @@ if [[ -n $ONEOFF ]]; then
 fi
 
 _zshrc_finished=true
+
+if [ -e /home/tombh/.nix-profile/etc/profile.d/nix.sh ]; then . /home/tombh/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

@@ -14,7 +14,7 @@
 # session_path = "~/.session"
 
 ## date format used, either "us" or "uk"
-# dialect = "us"
+dialect = "uk"
 
 ## enable or disable automatic sync
 # auto_sync = true

@@ -1,0 +1,27 @@
+runcharts:
+  - title: Ping times 10mins
+    position: [[0, 22], [80, 20]]
+    rate-ms: 10000
+    legend:
+        enabled: true
+        details: false
+    scale: 2
+    items:
+      - label: GOOGLE
+        color: 178
+        sample: tbx ping_just_ms www.google.com
+      - label: BING
+        sample: tbx ping_just_ms www.bing.com
+  - title: Ping times 10s
+    position: [[0, 0], [80, 23]]
+    rate-ms: 1000
+    legend:
+        enabled: true
+        details: false
+    scale: 2
+    items:
+      - label: GOOGLE
+        color: 178
+        sample: tbx ping_just_ms www.google.com 0.1
+      - label: BING
+        sample: tbx ping_just_ms www.bing.com 0.1

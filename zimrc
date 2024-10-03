@@ -3,7 +3,7 @@ zmodule completion
 zmodule zsh-users/zsh-syntax-highlighting
 zmodule zsh-users/zsh-autosuggestions
 zmodule zsh-users/zsh-history-substring-search
-zmodule marlonrichert/zsh-edit
 zmodule zdharma-continuum/fast-syntax-highlighting
 zmodule ohmyzsh/ohmyzsh --fpath 'plugins/extract' --source 'plugins/extract/extract.plugin.zsh'
 zmodule ohmyzsh/ohmyzsh --fpath 'plugins/git' --source 'plugins/git/git.plugin.zsh'
+zmodule marlonrichert/zsh-edit

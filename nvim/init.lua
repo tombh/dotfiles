@@ -1,3 +1,7 @@
+require("vim.lsp._watchfiles")._watchfunc = function(_, _, _)
+	return true
+end
+
 local g = vim.g
 local fn = vim.fn
 
@@ -13,72 +17,105 @@ if fn.empty(fn.glob(install_path)) > 0 then
 	})
 end
 
-local is_github_theme_loaded, _ = pcall(require, "github-theme")
-if is_github_theme_loaded then
-	require("github-theme").setup({
-		theme_style = "dimmed",
-		transparent = true,
-	})
-end
+require("_highlights")
 
 require("_plugins")
 if Packer_bootstrap then
 	require("packer").sync()
 end
 
-vim.notify = require("notify")
-vim.notify.setup({
-	-- TODO: use colour name from _highlights.lua
-	background_colour = "#1e222a"
-})
+local startswith = function(self, str)
+	return self:find("^" .. str) ~= nil
+end
 
-require("_highlights")
+_G.keymap = function(key, main_command, selection_command)
+	local command
+
+	if startswith(main_command, "<") then
+		command = main_command
+	else
+		command = string.format("<cmd>%s<CR>", main_command)
+	end
+
+	vim.api.nvim_set_keymap("i", key, command, { noremap = true, silent = true })
+	vim.api.nvim_set_keymap("n", key, command, { noremap = true, silent = true })
+	vim.api.nvim_set_keymap("c", key, command, { noremap = true, silent = true })
+
+	if selection_command then
+		main_command = selection_command
+	end
+
+	if startswith(main_command, "<") then
+		command = main_command
+	else
+		command = string.format(":'<,'>%s<CR>", main_command)
+	end
+
+	vim.api.nvim_set_keymap("v", key, command, { noremap = true, silent = true })
+	vim.api.nvim_set_keymap("s", key, string.format("<C-O>%s", command), { noremap = true, silent = true })
+end
+
 require("_icon_overrides")
-require("_mappings")
 require("_misc-utils")
 require("_statusline")
 require("_autopairs")
 require("_zenmode")
-require("_neo-tree")
 require("_treesitter")
 require("_telescope")
 require("_autocommands")
 require("_gitsigns")
-
+require("_github")
+require("_mason")
+require("_diffview")
 require("colorizer").setup()
-require("neoscroll").setup()
+require("neoscroll").setup({})
 require("Comment").setup()
+require("local-highlight").setup({
+	insert_mode = true,
+})
 
 -- lsp stuff
 require("lspkind").init()
 require("_lspconfig")
-require("_null-ls")
 require("_cmp-completion")
+require("_pygls_super_etc")
 
-g.auto_save = 0
+require("ibl").setup({
+	indent = { highlight = "IndentBlanklineIndent", char = "" },
+	whitespace = {
+		highlight = "IndentBlanklineIndent",
+		remove_blankline_trail = false,
+	},
+	scope = { enabled = false },
+})
 
-require("indent_blankline").setup {
-	space_char_blankline      = " ",
-	show_first_indent_level   = false,
-	char_highlight_list       = {
-		"IndentBlanklineIndent",
-	},
-	space_char_highlight_list = {
-		"IndentBlanklineIndent",
-	},
-}
+require("_scrollbar")
+require("_noice")
+
+require("_mappings")
+-- Last because of its <C-e> mapping
+require("_neo-tree")
 
 -- Make navigating between vim and tmux panes consistent
-g.tmux_navigator_no_mappings = 1
+g.tmux_navigator_no_mappings = 1 -- TODO: am I still using this?
 g.novim_mode_use_pane_controls = 0
-
-g.neoformat_enabled_python = { "black" }
 
 g.better_whitespace_enabled = 1
 g.strip_only_modified_lines = 1
 
-g.minimap_auto_start = 1
-g.minimap_highlight_range = 1
-g.minimap_highlight_search = 1
-g.minimap_git_colors = 1
-g.minimap_width = 8
+g.himalaya_mailbox_picker = "telescope"
+
+-- Show the highlight name under the current cursor
+-- vim.cmd([[
+-- 	function! SynGroup()
+-- 		let l:s = synID(line('.'), col('.'), 1)
+-- 		echo synIDattr(l:s, 'name') . ' -> ' . synIDattr(synIDtrans(l:s), 'name')
+-- 	endfun
+-- ]])
+
+vim.filetype.add({
+	extension = {
+		vert = "glsl",
+		frag = "glsl",
+	},
+})

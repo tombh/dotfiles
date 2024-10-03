@@ -1,0 +1,24 @@
+# modmap:
+#   - name: Except Chrome
+#     application:
+#       not: Google-chrome
+#     remap:
+#       CapsLock: Esc
+keymap:
+  - name: CTRL+ARROWS
+    remap:
+      Super-Left: Home
+      Super-Right: End
+      Super-Up: PageUp
+      Super-Down: PageDown
+      Super-Shift-Up: C-PageUp
+      Super-Shift-Down: C-PageDown
+
+      C-Super-Up: C-Super-Up
+      C-Super-Down: C-Super-Down
+      C-Super-Right: C-Super-Right
+      C-Super-Left: C-Super-Left
+      PageUp: KEY_UNKNOWN
+      PageDown: KEY_UNKNOWN
+      Home: KEY_UNKNOWN
+      End: KEY_UNKNOWN

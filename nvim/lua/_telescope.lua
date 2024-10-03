@@ -79,6 +79,9 @@ require("telescope").setup({
 				},
 			}),
 		},
+		-- frecency = {
+		-- 	db_safe_mode = false,
+		-- },
 	},
 })
 
@@ -116,10 +119,13 @@ _G.tombh_git_bcommits = function(opts)
 end
 
 vim.g.novim_mode_use_finding = 0
-_G.keymap("<C-p>", "lua require('telescope.builtin').find_files()")
+-- _G.keymap("<C-p>", "Telescope frecency frecency default_text=:CWD:")
+_G.keymap("<C-p>", "Telescope find_files")
 _G.keymap("<M-g>", "lua tombh_git_status()")
+_G.keymap("<M-G>", "lua require('telescope.builtin').git_status({sort_mru = true})")
+_G.keymap("<M-S>", "lua require('telescope.builtin').git_stash()")
 _G.keymap("<M-b>", "lua tombh_git_bcommits()")
-_G.keymap("<M-x>", "lua require('telescope.builtin').buffers()")
+_G.keymap("<M-x>", "lua require('telescope.builtin').buffers({sort_mru = true, ignore_current_buffer = true})")
 _G.keymap("<C-f>", "lua require('telescope.builtin').current_buffer_fuzzy_find()")
 _G.keymap("<M-l>", "Telescope resume")
 _G.keymap("<M-f>", "lua require('telescope.builtin').live_grep()")
@@ -128,4 +134,6 @@ _G.keymap(
 	"lua require('telescope.builtin').live_grep({vimgrep_arguments = {'rg', '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case', '-uuu'}})"
 )
 _G.keymap("<M-p>", "lua require('telescope.builtin').commands()")
-_G.keymap("<M-n>", "lua require('telescope.builtin').lsp_document_diagnostics()")
+_G.keymap("<M-n>", "lua require('telescope.builtin').diagnostics({ severity_bound='ERROR', bufnr = 0 })")
+_G.keymap("<M-N>", "lua require('telescope.builtin').diagnostics({ severity_bound='ERROR' })")
+_G.keymap("<C-j>", "lua require('telescope.builtin').treesitter()")

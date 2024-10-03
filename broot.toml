@@ -38,7 +38,7 @@ name = "view"
 key = "enter"
 invocation = "view"
 leave_broot = false
-execution = "xdg-open {file}"
+execution = "handlr open {file}"
 
 # [[verbs]]
 # internal = ":move_to_panel"

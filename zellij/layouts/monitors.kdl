@@ -1,0 +1,41 @@
+layout {
+    pane_template name="tbh-borderless" borderless=true
+    pane split_direction="vertical" {
+        pane split_direction="horizontal" {
+            pane {
+                name "2FA"
+                command "cotp"
+            }
+            pane {
+                name "Borgmatic"
+                command "~/bin/tbx"
+                args "watch_borgmatic_latest_diff"
+            }
+        }
+        pane {
+            pane {
+                name "DNF Updates"
+                command "~/bin/tbx"
+                args "watch_dnf_available_updates"
+            }
+            pane {
+                pane {
+                    name "Nix Updates"
+                    command "~/bin/tbx"
+                    args "watch_nix_available_updates"
+                }
+                pane {
+                    name "Cargo Updates"
+                    command "~/bin/tbx"
+                    args "watch_cargo_available_updates"
+                }
+            }
+        }
+    }
+    pane split_direction="vertical" size="30%" {
+        tbh-borderless command="btm"
+        tbh-borderless command="htop"
+    }
+}
+
+pane_frames true

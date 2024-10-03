@@ -1,5 +1,6 @@
 local scopes = { o = vim.o, b = vim.bo, w = vim.wo }
 
+-- Can change to `vim.opt.` now
 local function opt(scope, key, value)
 	scopes[scope][key] = value
 	if scope ~= "o" then
@@ -7,6 +8,9 @@ local function opt(scope, key, value)
 	end
 end
 
+opt("o", "swapfile", false)
+opt("o", "backup", false)
+opt("o", "writebackup", false)
 opt("o", "hidden", true)
 opt("o", "ignorecase", true)
 opt("o", "splitbelow", true)
@@ -14,13 +18,17 @@ opt("o", "splitright", true)
 opt("o", "termguicolors", true)
 opt("w", "number", false)
 opt("w", "cursorline", true)
+opt("w", "cursorlineopt", "screenline") -- TODO: Add to Novim-mode?
 opt("o", "numberwidth", 2)
 opt("o", "showmode", false)
-
+opt("o", "formatoptions", "tcr")
 opt("o", "mouse", "a")
+opt("o", "spell", true)
 
 opt("w", "signcolumn", "yes")
-opt("o", "cmdheight", 1)
+opt("o", "cmdheight", 0)
+opt("o", "laststatus", 0)
+opt("o", "showcmd", false)
 
 opt("o", "updatetime", 250) -- update interval for gitsigns
 opt("o", "timeoutlen", 500)
@@ -30,43 +38,32 @@ opt("b", "expandtab", true)
 opt("b", "shiftwidth", 2)
 
 opt("o", "wrap", false)
-opt("o", 'fillchars', 'eob: ')
+opt("o", "fillchars", "eob: ,diff: ,foldopen:▾,foldsep:│,foldclose:▸") -- this slash isn't lining up ╱
 
 -- Let arrow keys cross start-end of lines
 -- TODO: Add this to novim-mode?
-vim.cmd('set whichwrap+=<,>,[,]')
+vim.cmd("set whichwrap+=<,>,[,]")
 
-opt("o", "sidescroll", true)
+opt("w", "scrolloff", 10)
+opt("o", "smoothscroll", true) -- I thought this would allow oneline window scrolling of wrapped paragraphs
+-- opt("o", "sidescroll", true)
 opt("o", "list", true)
-opt("o",
-	'listchars',
-	'tab:——,eol:↲,nbsp:␣,trail: ,extends:⟩,precedes:⟨'
-)
+opt("o", "listchars", "tab:——,eol:↲,nbsp:␣,trail: ,extends:⟩,precedes:⟨")
 
--- Automaticay output all clipboard actions to OSC52
--- Thanks @kabouzeid ❤
--- https://github.com/ojroques/vim-oscyank/issues/24#issuecomment-1098406019
-local function copy(lines, _)
-	vim.fn.OSCYankString(table.concat(lines, "\n"))
-end
+opt("o", "guifont", "SauceCodePro Nerd Font:h12")
 
-local function paste()
-	return {
-		vim.fn.split(vim.fn.getreg(''), '\n'),
-		vim.fn.getregtype('')
-	}
-end
+vim.g.omni_sql_no_default_maps = 1
 
 vim.g.clipboard = {
-	name = "osc52",
+	name = "OSC 52",
 	copy = {
-		["+"] = copy,
-		["*"] = copy
+		["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+		["*"] = require("vim.ui.clipboard.osc52").copy("*"),
 	},
 	paste = {
-		["+"] = paste,
-		["*"] = paste
-	}
+		["+"] = require("vim.ui.clipboard.osc52").paste("+"),
+		["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+	},
 }
 
 local M = {}

@@ -1,6 +1,12 @@
+# format = """$character"""
+# right_format = """$git_status"""
+
 [character]
-success_symbol = "[](fg:#007cb1)"
-error_symbol = "[](fg:red)"
+success_symbol = "[󰣐](fg:#007cb1)"
+error_symbol = "[󰋔](fg:red)"
+
+[battery]
+disabled = true
 
 [package]
 disabled = true
@@ -17,14 +23,18 @@ disabled = true
 [aws]
 disabled = true
 
+[git_branch]
+format = '[$symbol$branch(:$remote_branch)]($style) '
+
 [git_status]
-conflicted = "🏳"
+format = '([$all_status$ahead_behind]($style) )'
+conflicted = "⚠️ "
 ahead = "⇡${count}"
 diverged = "⇕⇡${ahead_count}⇣${behind_count}"
 behind = "⇣${count}"
-untracked = "🤷"
-stashed = "📦"
-modified = "📝"
-staged = '[++\($count\)](green)'
-renamed = "👅"
-deleted = "🗑 "
+untracked = "[󰡯 ](fg:#ffc0cb)"
+stashed = "[ ](blue)"
+modified = "[ ](yellow)"
+staged = '[$count](green)'
+renamed = "➡️ "
+deleted = " "

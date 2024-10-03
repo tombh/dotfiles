@@ -29,7 +29,7 @@ true_zen.setup({
 			keep_default_fold_fillchars = true,
 			custom_bg = { "none", "" },
 			bg_configuration = true,
-			quit = "untoggle",
+			quit = "quit",
 			ignore_floating_windows = true,
 			affected_higroups = {
 				NonText = true,
@@ -68,3 +68,7 @@ true_zen.setup({
 		cursor_by_mode = false,
 	},
 })
+
+true_zen.after_mode_ataraxis_on = function()
+	vim.cmd("lua require('cmp').setup.buffer { enabled = false }")
+end
