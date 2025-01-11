@@ -5,37 +5,6 @@ require("neo-tree").setup({
 		modified = {
 			symbol = "",
 		},
-		icon = {
-			folder_empty = "󰜌",
-			folder_empty_open = "󰜌",
-		},
-		git_status = {
-			symbols = {
-				modified = "",
-				renamed = "󰁕",
-				unstaged = "󰄱",
-			},
-		},
-	},
-	document_symbols = {
-		kinds = {
-			File = { icon = "󰈙", hl = "Tag" },
-			Namespace = { icon = "󰌗", hl = "Include" },
-			Package = { icon = "󰏖", hl = "Label" },
-			Class = { icon = "󰌗", hl = "Include" },
-			Property = { icon = "󰆧", hl = "@property" },
-			Enum = { icon = "󰒻", hl = "@number" },
-			Function = { icon = "󰊕", hl = "Function" },
-			String = { icon = "󰀬", hl = "String" },
-			Number = { icon = "󰎠", hl = "Number" },
-			Array = { icon = "󰅪", hl = "Type" },
-			Object = { icon = "󰅩", hl = "Type" },
-			Key = { icon = "󰌋", hl = "" },
-			Struct = { icon = "󰌗", hl = "Type" },
-			Operator = { icon = "󰆕", hl = "Operator" },
-			TypeParameter = { icon = "󰊄", hl = "Type" },
-			StaticMethod = { icon = "󰠄 ", hl = "Function" },
-		},
 	},
 	filesystem = {
 		use_libuv_file_watcher = true,
@@ -51,15 +20,43 @@ require("neo-tree").setup({
 	},
 })
 
-_G.keymap("<C-S-e>", "Neotree show toggle")
+_G.keymap("<C-e>", "Neotree focus")
+
+_G.keymap("<C-M-e>", "Neotree show toggle")
 _G.keymap("<C-M-g>", "Neotree float git_status")
 
-function _G.neotree_focus_toggle()
-	if vim.bo.filetype == "neo-tree" then
-		vim.cmd(t("normal <S-M-Right>"))
-	else
-		vim.cmd("Neotree focus")
-	end
-end
+vim.api.nvim_create_autocmd('UIEnter', {
+	pattern = '*',
+	callback = function()
+		if vim.bo.filetype == "gitcommit" then
+			return
+		end
 
-_G.keymap("<C-e>", "lua neotree_focus_toggle()")
+
+		-- The `vim.schedule` gives neo-tree a moment to set itself up to not be identified as
+		-- a normal text file.
+		if vim.bo.filetype ~= "" then
+			if vim.fn.winwidth("%") > 120 then
+				vim.schedule(function()
+					vim.api.nvim_command("Neotree show")
+				end)
+			end
+		else
+			if vim.fn.winwidth("%") > 120 then
+				-- Doesn't look like there's a file, so choose one
+				-- TODO: But files without extensions, for example, don't report a filetype 🤔
+				vim.schedule(function()
+					vim.api.nvim_command("Neotree focus")
+				end)
+			end
+		end
+	end
+})
+
+vim.api.nvim_create_autocmd('FocusGained', {
+	pattern = '*',
+	callback = function()
+		require("neo-tree.sources.manager").refresh("filesystem")
+		require("neo-tree.events").fire_event("git_event")
+	end
+})

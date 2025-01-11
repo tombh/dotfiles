@@ -1,6 +1,27 @@
-require("neodev").setup({})
+local servers = {
+	"cssls",
+	"stylelint_lsp",
+	"rust_analyzer",
+	"lua_ls",
+	"bashls",
+	"eslint",
+	"html",
+	"jsonls",
+	"terraformls",
+	"pyright",
+	"gopls",
+	"golangci_lint_ls",
+	"vuels",
+	"ruff",
+	"ts_ls",
+	"tinymist",
+	"marksman",
+	"nushell",
 
-local util = require("lspconfig.util")
+	--- Problems installing
+	-- "solargraph",
+	-- "wgsl_analyzer",
+}
 
 vim.diagnostic.config({
 	underline = true,
@@ -28,175 +49,50 @@ vim.diagnostic.config({
 	},
 })
 
-vim.lsp.set_log_level("debug")
+local function on_attach(_client, _bufnr)
+	_G.keymap("<M-a>", vim.lsp.buf.code_action)
+	_G.keymap("<M-e>", vim.diagnostic.open_float)
+	_G.keymap("<M-R>", vim.lsp.buf.rename)
+	_G.keymap("<M-?>", vim.lsp.buf.hover)
 
-local function on_attach(client, bufnr)
-	-- TODO: Move to my _G.keymap()
-	local function buf_set_keymap(...)
-		vim.api.nvim_buf_set_keymap(bufnr, ...)
-	end
+	_G.keymap("<M-S>", vim.lsp.buf.signature_help)
+	_G.keymap("<M-T>", vim.lsp.buf.type_definition)
+	_G.keymap("<M-D>", vim.lsp.buf.declaration)
 
-	local function buf_set_option(...)
-		vim.api.nvim_buf_set_option(bufnr, ...)
-	end
+	_G.keymap("<M-d>", function()
+		require('telescope.builtin').lsp_definitions({ reuse_win = true })
+	end)
+	_G.keymap("<M-y>", function()
+		require('telescope.builtin').lsp_references({ fname_width = 200 })
+	end)
+	_G.keymap("<M-i>", function()
+		require('telescope.builtin').lsp_implementations({ fname_width = 200 })
+	end)
 
-	buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
-	local opts = { noremap = true, silent = false }
-	vim.keymap.set("i", "<M-a>", vim.lsp.buf.code_action, { noremap = true })
-	buf_set_keymap("i", "<M-D>", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-	buf_set_keymap("i", "<M-d>", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-	buf_set_keymap("n", "<M-d>", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-	buf_set_keymap("i", "<M-?>", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-	-- buf_set_keymap("i", "<M-S>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-	buf_set_keymap("i", "<M-e>", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
-	buf_set_keymap("i", "<M-T>", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
-	buf_set_keymap("i", "<M-R>", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
-	buf_set_keymap(
-		"i",
-		"<M-y>",
-		"<cmd>lua require('telescope.builtin').lsp_references({ fname_width = 200 })<CR>",
-		opts
-	)
-	-- buf_set_keymap("i", "<M-I>", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-	buf_set_keymap(
-		"i",
-		"<M-i>",
-		"<cmd>lua require('telescope.builtin').lsp_implementations({ fname_width = 200 })<CR>",
-		opts
-	)
-	buf_set_keymap(
-		"i",
-		"<M-d>",
-		"<cmd>lua require('telescope.builtin').lsp_definitions({ reuse_win = true })<CR>",
-		opts
-	)
-
-	-- buf_set_keymap("n", "[d", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>", opts)
-	-- buf_set_keymap("n", "]d", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>", opts)
-
-	-- Set some keybinds conditional on server capabilities
-	if client.server_capabilities.document_formatting then
-		buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", opts)
-	elseif client.server_capabilities.document_range_formatting then
-		buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
-	end
+	_G.keymap("<M-n>", function() require('telescope.builtin').diagnostics({ bufnr = 0 }) end)
+	_G.keymap("<M-N>", function() require('telescope.builtin').diagnostics({}) end)
 end
 
--- TODO feed to mason-lspconfig for auto install
-local servers = {
-	"cssls",
-	"stylelint_lsp",
-	"rust_analyzer",
-	"lua_ls",
-	"bashls",
-	"eslint",
-	"html",
-	"jsonls",
-	-- "denols",
-	"solargraph",
-	"terraformls",
-	"pyright",
-	"gopls",
-	"golangci_lint_ls",
-	"vuels",
-	"ruff_lsp",
-	"ts_ls",
-	"typst_lsp",
-	"marksman",
-	"wgsl_analyzer",
-}
 for _, server in pairs(servers) do
-	local capabilities = require("cmp_nvim_lsp").default_capabilities()
+	local capabiltiies = {}
 
-	local opts = {
+	local config = {
 		on_attach = on_attach,
-		capabilities = capabilities,
+		capabiltiies = require("blink.cmp").get_lsp_capabilities(capabiltiies),
 	}
 
-	-- if server == "denols" then
-	-- 	opts.init_options = {
-	-- 		importMap = "./import_map.json",
-	-- 		config = "./deno.json",
-	-- 	}
-	-- 	opts.root_dir = util.root_pattern("deno.json", "deno.jsonc")
-	-- end
-
-	if server == "pyright" then
-		-- pythonPath = "/home/tombh/.rye/py/cpython@3.12.4/bin/python3.12",
-		-- venvPath = "/home/tombh/Syncthing/SyncMisc/tbx/wayfire/.venv",
-		opts.root_dir = util.root_pattern("pyproject.toml")
-		opts.settings = {
-			python = {
-				pythonPath = "/home/tombh/Syncthing/SyncMisc/tbx/wayfire/.venv/bin/python",
-				-- analysis = {
-				-- 	autoSearchPaths = true,
-				-- 	useLibraryCodeForTypes = true,
-				-- 	diagnosticMode = "openFilesOnly",
-				-- },
-			},
-		}
-		-- opts.before_init = function(_, config)
-		-- 	-- config.settings.python.pythonPath = get_python_path(config.root_dir)
-		-- 	config.settings.python.pythonPath = "/home/tombh/.rye/py/cpython@3.12.4/bin/python3.12"
-		-- end
-	end
-
-	if server == "vuels" then
-		opts.settings = {
-			css = {},
-			emmet = {},
-			html = {
-				suggest = {},
-			},
-			javascript = {
-				format = {},
-			},
-			stylusSupremacy = {},
-			typescript = {
-				format = {},
-			},
-			vetur = {
-				completion = {
-					autoImport = false,
-					tagCasing = "kebab",
-					useScaffoldSnippets = false,
-				},
-				format = {
-					defaultFormatter = {
-						js = "none",
-						ts = "none",
-					},
-					defaultFormatterOptions = {},
-					scriptInitialIndent = false,
-					styleInitialIndent = false,
-				},
-				useWorkspaceDependencies = false,
-				validation = {
-					script = false,
-					style = true,
-					template = true,
-				},
-			},
-		}
-	end
-
 	if server == "lua_ls" then
-		opts.settings = {
+		config.settings = {
 			Lua = {
 				diagnostics = {
-					-- Get the language server to recognize the `vim` global
 					globals = { "vim", "describe", "it", "before_each", "after_each" },
 				},
 			},
 		}
-		opts.init_options = {
-			-- Using null-ls's stylua and luacheck instead
-			format = false,
-		}
 	end
 
 	if server == "rust_analyzer" then
-		opts.settings = {
+		config.settings = {
 			["rust-analyzer"] = {
 				-- cargo = {
 				-- 	cfgs = { spirv = "" },
@@ -208,7 +104,7 @@ for _, server in pairs(servers) do
 						"--message-format=json",
 						"--all",
 						"--all-targets",
-						"--all-features",
+						-- "--all-features",
 						-- "--",
 						-- "-W",
 						-- "clippy::all",
@@ -230,67 +126,33 @@ for _, server in pairs(servers) do
 		}
 	end
 
-	if server == "stylelint_lsp" then
-		opts.settings = {
-			stylelintplus = {
-				autoFixOnFormat = true,
-				autoFixOnSave = true,
-			},
-		}
-		opts.filetypes = { "css", "less", "scss" }
-	end
-
-	if server == "typst_lsp" then
-		opts.settings = {
-			exportPdf = "never", -- Choose onType, onSave or never.
-			-- serverPath = "" -- Normally, there is no need to uncomment it.
-		}
-	end
-
-	require("lspconfig")[server].setup(opts)
+	require("lspconfig")[server].setup(config)
 end
 
-local null_ls = require("null-ls")
-null_ls.setup({
-	debug = true,
-	sources = {
-		-- null_ls.builtins.diagnostics.luacheck,
-		-- null_ls.builtins.diagnostics.stylelint,
-		null_ls.builtins.formatting.shellharden,
-		null_ls.builtins.formatting.shfmt,
-		null_ls.builtins.formatting.stylua,
-		-- null_ls.builtins.formatting.stylelint,
-		null_ls.builtins.code_actions.gitsigns,
-		null_ls.builtins.formatting.prettier,
-		-- null_ls.builtins.diagnostics.sqlfluff.with({
-		-- 	extra_args = { "--dialect", "postgres" },
-		-- }),
-		-- null_ls.builtins.formatting.sqlfluff.with({
-		-- 	extra_args = { "--dialect", "postgres" },
-		-- }),
-	},
-	update_in_insert = false,
-})
+local is_mason_installed, _ = pcall(require, "mason")
+if is_mason_installed then
+	-- `nu` is already installed
+	_G.removeByKey(servers, "nushell")
 
-vim.api.nvim_create_user_command("FormatEnable", function()
-	vim.b._formatting_disabled = false
-	vim.notify("Auto-formatting enabled for buffer")
-end, {})
+	require("mason").setup()
+	require("mason-lspconfig").setup({
+		-- A list of servers to automatically install if they're not already installed.
+		-- This setting has no relation with the `automatic_installation` setting.
+		---@type string[]
+		ensure_installed = servers,
 
-vim.api.nvim_create_user_command("FormatDisable", function()
-	vim.b._formatting_disabled = true
-	vim.notify("Auto-formatting disabled for buffer")
-end, {})
+		-- Whether servers that are set up (via lspconfig) should be automatically installed if they're not already installed.
+		-- This setting has no relation with the `ensure_installed` setting.
+		-- Can either be:
+		--   - false: Servers are not automatically installed.
+		--   - true: All servers set up via lspconfig are automatically installed.
+		--   - { exclude: string[] }: All servers set up via lspconfig, except the ones provided in the list, are automatically installed.
+		--       Example: automatic_installation = { exclude = { "rust_analyzer", "solargraph" } }
+		---@type boolean
+		automatic_installation = true,
 
--- vim.api.nvim_create_autocmd({ "TextChangedI" }, {
--- 	-- or vim.api.nvim_create_autocmd({"BufNew", "TextChanged", "TextChangedI", "TextChangedP", "TextChangedT"}, {
--- 	callback = function(args)
--- 		vim.diagnostic.disable(args.buf)
--- 	end,
--- })
---
--- vim.api.nvim_create_autocmd({ "BufWrite" }, {
--- 	callback = function(args)
--- 		vim.diagnostic.enable(args.buf)
--- 	end,
--- })
+		-- See `:h mason-lspconfig.setup_handlers()`
+		---@type table<string, fun(server_name: string)>?
+		handlers = nil,
+	})
+end
