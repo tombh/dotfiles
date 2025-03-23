@@ -1,0 +1,13 @@
+// =============================================================================
+//
+// Waybar configuration
+//
+// Configuration reference: https://github.com/Alexays/Waybar/wiki/Configuration
+//
+// =============================================================================
+[{
+	"include": [
+		"~/.config/waybar/config.json",
+	]
+}]
+
