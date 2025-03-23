@@ -32,7 +32,6 @@ vim.api.nvim_create_autocmd('UIEnter', {
 			return
 		end
 
-
 		-- The `vim.schedule` gives neo-tree a moment to set itself up to not be identified as
 		-- a normal text file.
 		if vim.bo.filetype ~= "" then

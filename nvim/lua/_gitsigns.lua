@@ -1,12 +1,21 @@
 require("gitsigns").setup({
 	signs = {
-		add = { text = "│" },
-		change = { text = "│" },
-		delete = { text = "_" },
+		add = { text = '┃' },
+		change = { text = '┃' },
 		topdelete = { text = "‾" },
 		changedelete = { text = "—" },
+		delete = { text = "_" },
 		untracked = { text = "┆" },
 	},
+	signs_staged = {
+		add          = { text = "│" },
+		change       = { text = "│" },
+		topdelete    = { text = '‾' },
+		changedelete = { text = "—" },
+		delete       = { text = '_' },
+		untracked    = { text = '┆' },
+	},
+	signs_staged_enable = true,
 	numhl = false,
 	linehl = false,
 	watch_gitdir = {
@@ -21,7 +30,7 @@ require("gitsigns").setup({
 	current_line_blame_opts = {
 		virt_text = true,
 		virt_text_pos = "eol", -- 'eol' | 'overlay' | 'right_align'
-		delay = 1000,
+		delay = 100,
 		ignore_whitespace = false,
 	},
 	diff_opts = {
@@ -37,12 +46,6 @@ end)
 _G.keymap("<M-H>", function()
 	require("gitsigns").reset_hunk()
 end)
-
-vim.api.nvim_create_autocmd({ 'FocusGained', 'VimEnter' }, {
-	pattern = '*',
-	callback = function()
-		-- TODO: remove this, once https://github.com/lewis6991/gitsigns.nvim/issues/1122 is resolved
-		vim.cmd([[Gitsigns detach_all]])
-		vim.cmd([[Gitsigns attach]])
-	end
-})
+_G.keymap("<M-P>", function()
+	require("gitsigns").preview_hunk()
+end)

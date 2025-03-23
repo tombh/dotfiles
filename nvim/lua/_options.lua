@@ -27,9 +27,9 @@ vim.opt.wrap = false
 --
 vim.opt.cursorlineopt = 'screenline' -- TODO: Add to Novim-mode?
 
--- Various "hidden" chars
-vim.opt.fillchars = { eob = ' ', diff = ' ', foldopen = '▾', foldsep = '│', foldclose = '▸' }
+-- Various "hidden" chars, but don't seem to work 😞
 vim.list = true
+vim.opt.fillchars = { eob = ' ', diff = ' ', foldopen = '▾', foldsep = '│', foldclose = '▸' }
 vim.opt.listchars = { tab = '——', eol = '↲', nbsp = '␣', trail = ' ', extends = '⟩', precedes = '⟨' }
 
 -- Why??

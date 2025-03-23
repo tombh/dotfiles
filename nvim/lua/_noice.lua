@@ -2,6 +2,7 @@ require("noice").setup({
 	routes = {
 		{ filter = { event = "msg_show", kind = "", find = "written" },                  view = "mini" },
 		{ filter = { event = "msg_show", kind = "", find = "yanked into" },              view = "mini" },
+		{ filter = { find = "Format request failed" },                                   view = "mini" },
 
 		{ filter = { event = "msg_show", kind = "", find = "line less;" },               skip = true },
 		{ filter = { event = "msg_show", kind = "", find = "fewer lines" },              skip = true },

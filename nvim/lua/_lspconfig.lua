@@ -28,6 +28,7 @@ vim.diagnostic.config({
 	virtual_text = {
 		spacing = 2,
 	},
+	virtual_lines = true,
 	severity_sort = true,
 	signs = {
 		text = {
@@ -49,6 +50,8 @@ vim.diagnostic.config({
 	},
 })
 
+vim.lsp.log.set_level(vim.lsp.log.OFF)
+
 local function on_attach(_client, _bufnr)
 	_G.keymap("<M-a>", vim.lsp.buf.code_action)
 	_G.keymap("<M-e>", vim.diagnostic.open_float)
@@ -63,10 +66,15 @@ local function on_attach(_client, _bufnr)
 		require('telescope.builtin').lsp_definitions({ reuse_win = true })
 	end)
 	_G.keymap("<M-y>", function()
-		require('telescope.builtin').lsp_references({ fname_width = 200 })
+		require('telescope.builtin').lsp_references(
+			{
+				include_declaration = false,
+				reuse_win = true
+			}
+		)
 	end)
 	_G.keymap("<M-i>", function()
-		require('telescope.builtin').lsp_implementations({ fname_width = 200 })
+		require('telescope.builtin').lsp_implementations({ reuse_win = true })
 	end)
 
 	_G.keymap("<M-n>", function() require('telescope.builtin').diagnostics({ bufnr = 0 }) end)
@@ -156,3 +164,11 @@ if is_mason_installed then
 		handlers = nil,
 	})
 end
+
+vim.api.nvim_create_user_command("LSPInlayHintsEnable", function()
+	vim.lsp.inlay_hint.enable(true)
+end, {})
+
+vim.api.nvim_create_user_command("LSPInlayHintsDisable", function()
+	vim.lsp.inlay_hint.enable(false)
+end, {})

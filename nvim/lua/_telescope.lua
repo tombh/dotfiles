@@ -39,6 +39,7 @@ _G.keymap("<C-f>", function()
 end)
 
 _G.keymap("<M-l>", "Telescope resume")
+_G.keymap("<M-k>", "Telescope command_history")
 
 _G.keymap("<M-f>", function()
 	require("telescope.builtin").live_grep()
@@ -57,4 +58,8 @@ _G.keymap("<M-F>", function()
 			"-uuu",
 		},
 	})
+end)
+
+_G.keymap("<M-j>", function()
+	require("telescope.builtin").lsp_document_symbols({ symbols = 'function' })
 end)

@@ -33,11 +33,10 @@ require("blink.cmp").setup(
 				snippets = {
 					opts = {
 						-- TODO: file an issue about this in blink or rocks?
-						search_paths = { "/home/tombh/.local/share/nvim/site/pack/luarocks/opt/friendly-snippets/snippets/" }
+						search_paths = { "~/.local/share/nvim/site/pack/luarocks/opt/friendly-snippets/snippets/" }
 					}
 				}
 			},
-			cmdline = {}
 		}
 	}
 )

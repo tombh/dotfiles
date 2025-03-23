@@ -48,6 +48,10 @@ if is_github_theme_loaded then
 				fg = highlights.CursorLine.fg
 			}
 
+			highlights.LspInlayHint = {
+				fg = require("tokyonight.util").blend_bg(highlights.LspInlayHint.fg, 0.5)
+			}
+
 
 			-- TODO: They don't work 😢
 			highlights.NonText = {
