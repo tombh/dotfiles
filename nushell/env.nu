@@ -51,7 +51,7 @@ use std "path add"
 $env.PATH = ($env.PATH | split row (char esep))
 path add ~/.cargo/bin
 path add ~/bin
-path add .local/bin
+path add ~/.local/bin
 $env.PATH = ($env.PATH | uniq)
 
 # $env.PATH = (
@@ -76,4 +76,13 @@ $env.GPG_TTY = (tty | str trim)
 $env.DISPLAY = ":0"
 $env.VK_ICD_FILENAMES = "/usr/share/vulkan/icd.d"
 
-source nix.nu
+
+if $env.USER == "streamer" {
+	$env.CARGO_BUILD_JOBS = 6
+	$env.DISPLAY = ":1"
+}
+
+if $env.USER == "tombh" {
+	source nix.nu
+}
+

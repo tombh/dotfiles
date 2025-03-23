@@ -31,5 +31,6 @@ def la [path?] {
         --sort time
         --reverse
         --almost-all
+				($path | default .)
     )
 }
