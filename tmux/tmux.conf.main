@@ -3,10 +3,10 @@ base_path="$HOME/.config/tmux"
 setenv -g TMUX_PLUGIN_MANAGER_PATH "$base_path/plugins/"
 
 # Unbind ALL keybindings whilst REBINDING defaults
-run-shell '\
-    export f=$(mktemp) \
-    && tmux -f /dev/null -L temp start-server \; list-keys > $f \
-    && tmux unbind -a \; source-file $f'
+# run-shell '\
+#     export f=$(mktemp) \
+#     && tmux -f /dev/null -L temp start-server \; list-keys > $f \
+#     && tmux unbind -a \; source-file $f'
 # Reload tmux config
 bind-key R source-file $base_path/tmux.conf \; display-message "$base_path/tmux.conf reloaded"
 
@@ -24,7 +24,8 @@ if "test ! -d $base_path/plugins/tpm" \
 
 source-file "$base_path/theme.conf"
 
-set -g default-terminal "tmux"
+# Neovim's `:checkhealth` recomends `tmux-256color`
+set -g default-terminal "tmux-256color"
 set -g set-clipboard on
 
 # What's this for?
@@ -42,8 +43,8 @@ set -g window-size latest
 setw -g aggressive-resize on
 
 # Detects whether Vim is currently loaded
-is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+# is_vim="^ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?|fzf)(diff)?$'"
 
 # Hmm 🙄 Needed for Home/End in Neovim
 # See: https://github.com/neovim/neovim/issues/6134#issuecomment-758475291
@@ -76,6 +77,17 @@ bind-key -n M-Down  select-pane -D
 bind-key -n M-Right select-pane -R
 bind-key -n M-Up    select-pane -U
 
+
+bind-key -n M-Left if-shell "$is_vim" 'send-keys M-Left' { if -F '#{pane_at_left}' '' 'select-pane -L' }
+bind-key -n M-Down if-shell "$is_vim" 'send-keys M-Down' { if -F '#{pane_at_bottom}' '' 'select-pane -D' }
+bind-key -n M-Right if-shell "$is_vim" 'send-keys M-Right' { if -F '#{pane_at_right}' '' 'select-pane -R' }
+bind-key -n M-Up if-shell "$is_vim" 'send-keys M-Up' { if -F '#{pane_at_top}' '' 'select-pane -U' }
+
+bind-key -T copy-mode-vi M-Left if -F '#{pane_at_left}' '' 'select-pane -L'
+bind-key -T copy-mode-vi M-Down if -F '#{pane_at_bottom}' '' 'select-pane -D'
+bind-key -T copy-mode-vi M-Right if -F '#{pane_at_right}' '' 'select-pane -R'
+bind-key -T copy-mode-vi M-Up if -F '#{pane_at_top}' '' 'select-pane -U'
+
 # Gotta bind the same nav keys for 'scroll' mode
 bind-key -T copy-mode-vi M-Left  select-pane -L
 bind-key -T copy-mode-vi M-Down  select-pane -D
@@ -106,29 +118,24 @@ bind -n C-Up if-shell "$is_vim" "send-keys C-Up" "copy-mode \; send-keys Up"
 bind -n C-Down if-shell "$is_vim" "send-keys C-Down" "copy-mode \; send-keys Down"
 
 # Rather complex code to make SHIFT+ARROW keys work as you'd normally expect during selection
-is_selecting="[[ \"#{selection_present}\" -eq \"1\" ]]"
-bind -n -T copy-mode-vi Left \
-    send-keys -X clear-selection \; send-keys -X cursor-left
+bind -n -T copy-mode-vi Left send-keys -X clear-selection \; send-keys -X cursor-left
 bind -n -T copy-mode-vi S-Left \
-  if-shell "$is_selecting" \
+  if-shell -F '#{selection_present}' \
     "send-keys -X cursor-left" \
     "send-keys -X begin-selection \; send-keys -X cursor-left"
-bind -n -T copy-mode-vi Right \
-    send-keys -X clear-selection \; send-keys -X cursor-right
+bind -n -T copy-mode-vi Right send-keys -X clear-selection \; send-keys -X cursor-right
 bind -n -T copy-mode-vi S-Right \
-  if-shell "$is_selecting" \
+  if-shell -F '#{selection_present}' \
     "send-keys -X cursor-right" \
     "send-keys -X begin-selection \; send-keys -X cursor-right"
-bind -n -T copy-mode-vi Up \
-    send-keys -X clear-selection \; send-keys -X cursor-up
+bind -n -T copy-mode-vi Up send-keys -X clear-selection \; send-keys -X cursor-up
 bind -n -T copy-mode-vi S-Up \
-  if-shell "$is_selecting" \
+  if-shell -F '#{selection_present}' \
     "send-keys -X cursor-up" \
     "send-keys -X begin-selection \; send-keys -X cursor-up"
-bind -n -T copy-mode-vi Down \
-    send-keys -X clear-selection \; send-keys -X cursor-down
+bind -n -T copy-mode-vi Down send-keys -X clear-selection \; send-keys -X cursor-down
 bind -n -T copy-mode-vi S-Down \
-  if-shell "$is_selecting" \
+  if-shell -F '#{selection_present}' \
     "send-keys -X cursor-down" \
     "send-keys -X begin-selection \; send-keys -X cursor-down"
 
