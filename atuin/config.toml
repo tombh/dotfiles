@@ -32,7 +32,7 @@ dialect = "uk"
 
 ## which search mode to use
 ## possible values: prefix, fulltext, fuzzy, skim
-# search_mode = "fuzzy"
+search_mode = "fuzzy"
 
 ## which filter mode to use
 ## possible values: global, host, session, directory
@@ -41,7 +41,7 @@ dialect = "uk"
 ## which filter mode to use when atuin is invoked from a shell up-key binding
 ## the accepted values are identical to those of "filter_mode"
 ## leave unspecified to use same mode set in "filter_mode"
-# filter_mode_shell_up_key_binding = "global"
+filter_mode_shell_up_key_binding = "directory"
 
 ## which style to use
 ## possible values: auto, full, compact
@@ -49,11 +49,14 @@ dialect = "uk"
 
 ## the maximum number of lines the interface should take up
 ## set it to 0 to always go full screen
-# inline_height = 0
+inline_height = 9
 
 ## enable or disable showing a preview of the selected command
 ## useful when the command is longer than the terminal width and is cut off
-# show_preview = false
+show_preview = false
+show_tabs = false
+show_help = false
+invert = true
 
 ## what to do when the escape key is pressed when searching
 ## possible values: return-original, return-query
