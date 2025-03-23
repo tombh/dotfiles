@@ -3,8 +3,9 @@ layout {
     pane split_direction="vertical" {
         pane split_direction="horizontal" {
             pane {
-                name "2FA"
-                command "cotp"
+                name "Bandwhich"
+                command "sudo"
+                args "/home/tombh/.nix-profile/bin/bandwhich"
             }
             pane {
                 name "Borgmatic"
@@ -18,7 +19,7 @@ layout {
                 command "~/bin/tbx"
                 args "watch_dnf_available_updates"
             }
-            pane {
+            pane split_direction="vertical" {
                 pane {
                     name "Nix Updates"
                     command "~/bin/tbx"
@@ -29,6 +30,11 @@ layout {
                     command "~/bin/tbx"
                     args "watch_cargo_available_updates"
                 }
+            }
+            pane {
+                name "Syncthing"
+                command "watch"
+                args "stc"
             }
         }
     }
