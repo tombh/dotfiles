@@ -1,1 +1,4 @@
 nvim/plugin/
+history.txt
+history.sqlite3
+waybar/bin/state

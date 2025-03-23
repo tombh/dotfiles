@@ -69,7 +69,7 @@ eval "$(mise activate zsh)"
 # need this.
 export TERM=xterm-256color
 
-if [[ $(tty) = /dev/tty1 || $(tty) = /dev/tty2 ]]; then
+if [[ $(tty) = /dev/tty1 ]]; then
 	eval $(keychain --eval --dir $HOME/.config/keychain --quiet --noask --agents gpg,ssh id_rsa)
 	pushd ~/.config/tmux/resurrect
 		ln -sf "$(ls -Art | tail -n3 | head -n1)" last
@@ -84,9 +84,3 @@ fi
 
 if [[ $(tty) = /dev/tty2 ]]; then
 fi
-
-if [[ $(tty) = /dev/tty3 ]]; then
-	exec zsh
-fi
-
-

@@ -76,7 +76,7 @@ export XDG_CONFIG_HOME=$HOME/.config
 
 # Aliases
 alias 'rm'='rm -I'
-alias 's'='sudo -E'
+alias 's'='sudo --preserve-env=PATH --preserve-env=HOME env'
 alias 'se'='sudoedit'
 
 alias 'p'='paru'
@@ -201,7 +201,7 @@ bindkey '^b' br
 eval "$(starship init zsh)"
 
 # Rye Python and Python packages manager
-source "$HOME/.rye/env"
+[ -f "$HOME/.rye/env" ] && source "$HOME/.rye/env"
 
 if [[ -n $ONEOFF ]]; then
 	eval "$ONEOFF"
