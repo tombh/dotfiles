@@ -8,14 +8,14 @@
 # List of Neovim plugins to install alongside their versions.
 # If the plugin name contains a dot then you must add quotes to the key name!
 [plugins]
-"rocks.nvim" = "2.43.1"
+"rocks.nvim" = "2.44.0"
 "tokyonight.nvim" = "4.11.0"
-"neo-tree.nvim" = "3.30"
+"neo-tree.nvim" = "3.31.1"
 "tmux.nvim" = "scm"
 "mason.nvim" = "1.11.0"
 "mason-lspconfig.nvim" = "1.32.0"
 "noice.nvim" = "4.10.0"
-"rocks-git.nvim" = "2.5.2"
+"rocks-git.nvim" = "2.5.3"
 "lualine.nvim" = "scm"
 "comment.nvim" = "0.8.0"
 "telescope-ui-select.nvim" = "scm"
@@ -24,41 +24,42 @@ friendly-snippets = "scm"
 nvim-autopairs = "scm"
 nvim-notify = "3.15.0"
 
-tree-sitter-rust = "0.0.41"
-tree-sitter-just = "0.0.36"
+tree-sitter-rust = "0.0.47"
+tree-sitter-just = "0.0.37"
 tree-sitter-toml = "0.0.31"
-tree-sitter-python = "0.0.40"
-tree-sitter-yaml = "0.0.31"
+tree-sitter-python = "0.0.45"
+tree-sitter-yaml = "0.0.32"
 tree-sitter-javascript = "0.0.36"
-tree-sitter-nu = "0.0.33"
+tree-sitter-nu = "0.0.40"
 tree-sitter-bash = "0.0.40"
 tree-sitter-gitignore = "0.0.29"
-tree-sitter-kdl = "0.0.29"
-tree-sitter-ini = "0.0.29"
+tree-sitter-kdl = "0.0.30"
+tree-sitter-ini = "0.0.30"
 tree-sitter-tmux = "0.0.29"
-tree-sitter-markdown = "0.0.37"
+tree-sitter-markdown = "0.0.40"
 tree-sitter-json = "0.0.36"
-tree-sitter-css = "0.0.36"
+tree-sitter-css = "0.0.37"
 
-tree-sitter-gitcommit = "0.0.33"
+tree-sitter-gitcommit = "0.0.34"
 tree-sitter-git_rebase = "0.0.29"
 tree-sitter-diff = "0.0.32"
-tree-sitter-xml = "0.0.36"
+tree-sitter-xml = "0.0.38"
 tree-sitter-ron = "0.0.29"
-tree-sitter-make = "0.0.29"
+tree-sitter-make = "0.0.30"
 tree-sitter-html = "0.0.36"
 tree-sitter-wgsl = "0.0.31"
 tree-sitter-desktop = "0.0.8"
 tree-sitter-go = "0.0.39"
-"gitsigns.nvim"= "1.0.0"
+"gitsigns.nvim"= "1.0.2"
 tree-sitter-ruby = "0.0.35"
 "diffview.nvim" = "scm"
-tree-sitter-glsl = "0.0.30"
+tree-sitter-glsl = "0.0.31"
 tree-sitter-sql = "0.0.40"
+tree-sitter-fish = "0.0.30"
 
 [plugins."blink.cmp"]
 git = "saghen/blink.cmp"
-rev = "v0.12.3"
+rev = "v0.14.1"
 
 [plugins.novim-mode]
 git = "tombh/novim-mode"
@@ -67,7 +68,7 @@ opt = true
 
 [plugins."telescope.nvim"]
 git = "nvim-telescope/telescope.nvim"
-rev = "78857db"
+rev = "0.1.8"
 
 [plugins.nvim-scrollbar]
 git = "petertriho/nvim-scrollbar"
@@ -75,7 +76,7 @@ rev = "6994eb9f73d5fdc36ee2c8717940e8c853e51a49"
 
 [plugins."local-highlight.nvim"]
 git = "tzachar/local-highlight.nvim"
-rev = "c8e5fa9a945b7e99bccba2c9993b4d7a0327173d"
+rev = "4b0756a96c7b683f5a813b58b137dd7db2dedac5"
 
 [treesitter]
 auto_highlight = "all"
