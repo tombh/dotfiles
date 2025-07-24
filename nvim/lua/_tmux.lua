@@ -41,3 +41,18 @@ end)
 _G.keymap("<M-Down>", function()
 	require("tmux").move_bottom()
 end)
+
+-- Better support for checking whether the pane is running Neovim. This approach supports running
+-- Neovim in Tattoy. Inspired by: https://github.com/christoomey/vim-tmux-navigator/issues/295#issuecomment-1123455337
+vim.api.nvim_create_autocmd('VimEnter', {
+	pattern = '*',
+	callback = function()
+		vim.fn.system("tmux set-option -p @is_vim yes")
+	end
+})
+vim.api.nvim_create_autocmd('VimLeave', {
+	pattern = '*',
+	callback = function()
+		vim.fn.system("tmux set-option -p -u @is_vim")
+	end
+})

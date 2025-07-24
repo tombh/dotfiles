@@ -38,8 +38,11 @@ _G.keymap("<C-f>", function()
 	require("telescope.builtin").current_buffer_fuzzy_find()
 end)
 
-_G.keymap("<M-l>", "Telescope resume")
-_G.keymap("<M-k>", "Telescope command_history")
+_G.keymap("<M-/>", "Telescope resume")
+_G.keymap("<M-m>", "Telescope command_history")
+
+_G.keymap("<M-G>", "Telescope git_status")
+_G.keymap("<M-b>", "Telescope git_bcommits")
 
 _G.keymap("<M-f>", function()
 	require("telescope.builtin").live_grep()
@@ -60,6 +63,6 @@ _G.keymap("<M-F>", function()
 	})
 end)
 
-_G.keymap("<M-j>", function()
+_G.keymap("<M-F>", function()
 	require("telescope.builtin").lsp_document_symbols({ symbols = 'function' })
 end)

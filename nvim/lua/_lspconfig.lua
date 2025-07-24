@@ -5,10 +5,10 @@ local servers = {
 	"lua_ls",
 	"bashls",
 	"eslint",
-	"html",
 	"jsonls",
 	"terraformls",
 	"pyright",
+	"glsl_analyzer",
 	"gopls",
 	"golangci_lint_ls",
 	"vuels",
@@ -17,9 +17,9 @@ local servers = {
 	"tinymist",
 	"marksman",
 	"nushell",
+	"superhtml",
 
 	--- Problems installing
-	-- "solargraph",
 	-- "wgsl_analyzer",
 }
 
@@ -28,7 +28,7 @@ vim.diagnostic.config({
 	virtual_text = {
 		spacing = 2,
 	},
-	virtual_lines = true,
+	virtual_lines = false,
 	severity_sort = true,
 	signs = {
 		text = {
@@ -56,7 +56,7 @@ local function on_attach(_client, _bufnr)
 	_G.keymap("<M-a>", vim.lsp.buf.code_action)
 	_G.keymap("<M-e>", vim.diagnostic.open_float)
 	_G.keymap("<M-R>", vim.lsp.buf.rename)
-	_G.keymap("<M-?>", vim.lsp.buf.hover)
+	_G.keymap("<M-S>", vim.lsp.buf.hover)
 
 	_G.keymap("<M-S>", vim.lsp.buf.signature_help)
 	_G.keymap("<M-T>", vim.lsp.buf.type_definition)
@@ -72,9 +72,6 @@ local function on_attach(_client, _bufnr)
 				reuse_win = true
 			}
 		)
-	end)
-	_G.keymap("<M-i>", function()
-		require('telescope.builtin').lsp_implementations({ reuse_win = true })
 	end)
 
 	_G.keymap("<M-n>", function() require('telescope.builtin').diagnostics({ bufnr = 0 }) end)
@@ -129,7 +126,8 @@ for _, server in pairs(servers) do
 					},
 				},
 				-- Just to get cfg(not(test)) to not show warning
-				diagnostics = { disabled = { "inactive-code" } },
+				diagnostics = { disabled = { "inactive-code", "macro-error" } },
+				-- completion = { autoimport = { enable = false } }
 			},
 		}
 	end

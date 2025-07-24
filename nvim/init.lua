@@ -19,8 +19,14 @@ require("_options")
 require("_formatting")
 require("_scrollbar")
 require("_telescope")
+require("_treesitter")
 require("_misc")
 
-require('local-highlight').setup({ insert_mode = true })
+require('local-highlight').setup({
+	insert_mode = true,
+	animate = {
+		enabled = false,
+	},
+})
 require('nvim-autopairs').setup()
 vim.cmd.packadd("novim-mode")

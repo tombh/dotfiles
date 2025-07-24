@@ -10,3 +10,17 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 		end
 	end,
 })
+
+vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+	pattern = "*.html",
+	callback = function()
+		vim.cmd([[set filetype=html]])
+	end,
+})
+
+vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+	pattern = "*.Containerfile",
+	callback = function()
+		vim.cmd([[set filetype=dockerfile]])
+	end,
+})

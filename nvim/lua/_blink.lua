@@ -12,10 +12,15 @@ require("blink.cmp").setup(
 				'snippet_forward',
 				'fallback'
 			},
-			['<S-Tab>'] = { 'select_prev', 'fallback' },
+			['<C-G>'] = { 'show' },
+			['<M-g>'] = { 'show' },
+			['<C-Up>'] = { 'select_prev', 'fallback' },
+			['<C-Down>'] = { 'select_next', 'fallback' },
+			['<C-Right>'] = { 'show_documentation', 'fallback' },
+			['<C-Left>'] = { 'hide_documentation', 'cancel', 'fallback' },
 			['<CR>'] = { 'accept', 'fallback' },
-			['<Up>'] = { 'hide', 'fallback' },
-			['<Down>'] = { 'hide', 'fallback' },
+			['<Up>'] = { 'cancel', 'fallback' },
+			['<Down>'] = { 'cancel', 'fallback' },
 			['<Esc>'] = { 'hide', 'fallback' },
 		},
 		completion = {
@@ -25,8 +30,23 @@ require("blink.cmp").setup(
 			},
 			menu = {
 				-- auto_show = true,
-				scrollbar = false
-			}
+				scrollbar = false,
+				draw = {
+					-- We don't need label_description now because label and label_description are already
+					-- combined together in label by colorful-menu.nvim.
+					columns = { { "kind_icon" }, { "label", gap = 1 } },
+					components = {
+						label = {
+							text = function(ctx)
+								return require("colorful-menu").blink_components_text(ctx)
+							end,
+							highlight = function(ctx)
+								return require("colorful-menu").blink_components_highlight(ctx)
+							end,
+						},
+					},
+				}
+			},
 		},
 		sources = {
 			providers = {
