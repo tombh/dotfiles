@@ -5,9 +5,26 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 			vim.lsp.buf.format({
 				async = false,
 				timeout_ms = 10000,
+				-- filter = function(client)
+				-- 	-- Never use Typescript LSP to format, rely on Prettier instead
+				-- 	return client.name ~= "tsserver"
+				-- end,
+			})
+		end
+	end
+})
+
+-- Rerun `biome` on `.svelte` files, after all the other fomatters have run. `biome` doesn't support
+-- formatting the HTML and CSS blocks, so we let the other formatters do those first.
+vim.api.nvim_create_autocmd('BufWritePre', {
+	pattern = '*.svelte',
+	callback = function()
+		if vim.b._formatting_disabled ~= true then
+			vim.lsp.buf.format({
+				async = false,
+				timeout_ms = 10000,
 				filter = function(client)
-					-- Never use Typescript LSP to format, rely on Prettier instead
-					return client.name ~= "tsserver"
+					return client.name ~= "svelte"
 				end,
 			})
 		end

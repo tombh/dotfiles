@@ -34,10 +34,4 @@ end)
 
 -- Jump history navigation
 _G.keymap("<M-,>", 'exec "normal \\<C-o>"')
-_G.keymap("<M-i>", 'exec "normal 1 \\<C-i>"')
--- Move cursor line to center of screen
-_G.keymap("<C-i>",
-	function()
-		vim.cmd [[ normal zz ]]
-	end
-)
+_G.keymap("<M-.>", 'exec "normal 1 \\<C-i>"')

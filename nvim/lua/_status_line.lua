@@ -25,7 +25,7 @@ require("lualine").setup({
 		},
 		lualine_b = {
 			"branch",
-			{ "diff", symbols = { added = " ", modified = " ", removed = " " } },
+			-- { "diff", symbols = { added = " ", modified = " ", removed = " " } },
 			{
 				"diagnostics",
 				update_in_insert = true,

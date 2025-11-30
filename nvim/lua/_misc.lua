@@ -24,3 +24,29 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
 		vim.cmd([[set filetype=dockerfile]])
 	end,
 })
+
+
+-- Try to keep the current line in the middle of the screen.
+_G.cursor_last_position = vim.api.nvim_win_get_cursor(0)
+vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+	callback = function()
+		local bufnr = vim.api.nvim_get_current_buf()
+		if vim.bo[bufnr].modifiable == false then
+			return
+		end
+
+		local mode = vim.fn.mode()
+		if not mode:match("^i") then
+			return
+		end
+
+		local position = vim.api.nvim_win_get_cursor(0)
+		local row_delta = math.abs(position[1] - _G.cursor_last_position[1])
+
+		if row_delta > 5 then
+			vim.cmd("normal! zz")
+		end
+
+		_G.cursor_last_position = position
+	end
+})

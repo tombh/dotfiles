@@ -63,6 +63,6 @@ _G.keymap("<M-F>", function()
 	})
 end)
 
-_G.keymap("<M-F>", function()
-	require("telescope.builtin").lsp_document_symbols({ symbols = 'function' })
+_G.keymap("<M-u>", function()
+	require("telescope.builtin").lsp_document_symbols({ symbols = { 'method', 'function' } })
 end)

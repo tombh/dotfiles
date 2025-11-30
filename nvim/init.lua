@@ -1,8 +1,8 @@
 require("_rocks")
 
-local tmp = vim.g.rocks_nvim
-tmp._log_level = vim.log.levels.DEBUG
-vim.g.rocks_nvim = tmp
+-- local tmp = vim.g.rocks_nvim
+-- tmp._log_level = vim.log.levels.DEBUG
+-- vim.g.rocks_nvim = tmp
 
 require("_utils")
 require("_colours")
@@ -30,3 +30,4 @@ require('local-highlight').setup({
 })
 require('nvim-autopairs').setup()
 vim.cmd.packadd("novim-mode")
+-- vim.lsp.set_log_level("debug")
