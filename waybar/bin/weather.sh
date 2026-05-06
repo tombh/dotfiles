@@ -9,8 +9,8 @@
 #
 # echo -n "{\"text\": \" 🌡️$temperature°C\"}"
 
-lookup_latitude="-34.6"
-lookup_longitude="-58.38"
+lookup_latitude="52.41"
+lookup_longitude="-4.08"
 domain="tombh.co.uk"
 request_by="Tom BH api.met.no@$domain"
 

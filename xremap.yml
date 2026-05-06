@@ -1,24 +1,132 @@
-# modmap:
-#   - name: Except Chrome
-#     application:
-#       not: Google-chrome
-#     remap:
-#       CapsLock: Esc
-keymap:
-  - name: CTRL+ARROWS
+modmap:
+  - name: Replace keys
     remap:
-      Super-Left: Home
-      Super-Right: End
-      Super-Up: PageUp
-      Super-Down: PageDown
-      Super-Shift-Up: C-PageUp
-      Super-Shift-Down: C-PageDown
+      KEY_SEMICOLON: KEY_SPACE
+      KEY_SPACE: ALT_R
+      ALT_R: CTRL_R
+      Up: KEY_UNKNOWN
+      Down: KEY_UNKNOWN
+      Left: KEY_UNKNOWN
+      Up: KEY_UNKNOWN
+      Capslock: KEY_UNKNOWN
 
-      C-Super-Up: C-Super-Up
-      C-Super-Down: C-Super-Down
-      C-Super-Right: C-Super-Right
-      C-Super-Left: C-Super-Left
-      PageUp: KEY_UNKNOWN
-      PageDown: KEY_UNKNOWN
-      Home: KEY_UNKNOWN
-      End: KEY_UNKNOWN
+keymap:
+  # - name: CTRL+ARROWS
+  #   remap:
+  #     Super-Left: Home
+  #     Super-Right: End
+  #     Super-Up: PageUp
+  #     Super-Down: PageDown
+  #     Super-Shift-Up: C-PageUp
+  #     Super-Shift-Down: C-PageDown
+  #
+  #     Control-Super-Up: C-Super-Up
+  #     Control-Super-Down: C-Super-Down
+  #     Control-Super-Right: C-Super-Right
+  #     Control-Super-Left: C-Super-Left
+  #     PageUp: KEY_UNKNOWN
+  #     PageDown: KEY_UNKNOWN
+  #     Home: KEY_UNKNOWN
+  #     End: KEY_UNKNOWN
+
+  - name: Touch
+    remap:
+      ALT_R-Q: KEY_1
+      ALT_R-W: KEY_2
+      ALT_R-E: KEY_3
+      ALT_R-R: KEY_4
+      ALT_R-T: KEY_5
+      ALT_R-Y: KEY_6
+      ALT_R-U: KEY_7
+      ALT_R-I: KEY_8
+      ALT_R-O: KEY_9
+      ALT_R-P: KEY_0
+
+      # Arrows
+      ALT_R-J: KEY_LEFT
+      ALT_R-K: KEY_UP
+      ALT_R-L: KEY_DOWN
+      ALT_R-KEY_SPACE: KEY_RIGHT
+
+      ALT_L-J: CTRL_L-ALT_L-J
+      ALT_L-K: CTRL_L-ALT_L-K
+      ALT_L-L: CTRL_L-ALT_L-L
+      ALT_L-KEY_SPACE: CTRL_L-ALT_L-D
+
+      ALT_L-ALT_R-J: ALT_L-KEY_LEFT
+      ALT_L-ALT_R-K: ALT_L-KEY_UP
+      ALT_L-ALT_R-L: ALT_L-KEY_DOWN
+      ALT_L-ALT_R-KEY_SPACE: ALT_L-KEY_RIGHT
+
+      ALT_L-ALT_R-U: CTRL_L-ALT_L-KEY_LEFT
+      ALT_L-ALT_R-I: CTRL_L-ALT_L-KEY_UP
+      ALT_L-ALT_R-O: CTRL_L-ALT_L-KEY_DOWN
+      ALT_L-ALT_R-P: CTRL_L-ALT_L-KEY_RIGHT
+
+      #
+      CTRL_R-J: CTRL_L-LEFT
+      CTRL_R-K: CTRL_L-UP
+      CTRL_R-L: CTRL_L-KEY_DOWN
+      CTRL_R-KEY_SPACE: CTRL_L-RIGHT
+
+      CTRL_R-O: CTRL_L-L
+      CTRL_R-Q: CTRL_L-Q
+
+      # -=[]\ _+{}|
+      ALT_R-N: KEY_MINUS
+      ALT_R-M: KEY_EQUAL
+      ALT_R-KEY_COMMA: KEY_LEFTBRACE
+      ALT_R-KEY_DOT: KEY_RIGHTBRACE
+      ALT_R-KEY_SLASH: KEY_BACKSLASH
+      
+      ALT_R-KEY_F: KEY_ENTER
+      ALT_R-KEY_G: Tab
+      ALT_R-KEY_H: Backspace
+
+      ALT_R-KEY_C: KEY_SEMICOLON            
+      ALT_R-KEY_V: KEY_GRAVE
+      ALT_R-KEY_B: KEY_APOSTROPHE
+
+      ALT_R-A: KEY_PAGEUP
+      ALT_R-Z: KEY_PAGEDOWN
+      ALT_R-S: KEY_HOME
+      ALT_R-D: KEY_END
+      ALT_R-X: KEY_ESC
+
+      # !IMPORTANT! These key combos shuts down the WM.
+      ALT_L-CTRL_R-Backspace: KEY_UNKNOWN
+      ALT_L-CTRL_R-Capslock: KEY_UNKNOWN
+
+      ALT_L-CTRL_R-Q: SUPER_L-KEY_Q
+      ALT_L-CTRL_R-W: SUPER_L-KEY_W
+      ALT_L-CTRL_R-E: SUPER_L-KEY_E
+      ALT_L-CTRL_R-R: SUPER_L-KEY_R
+      ALT_L-CTRL_R-T: SUPER_L-KEY_T
+      # SHIFT_L-ALT_L-CTRL_R-U: CTRL_L-SUPER_L-KEY_LEFT
+      # SHIFT_L-ALT_L-CTRL_R-I: CTRL_L-SUPER_L-KEY_UP
+      # SHIFT_L-ALT_L-CTRL_R-O: CTRL_L-SUPER_L-KEY_DOWN
+      ALT_L-CTRL_R-KEY_P: SUPER_L-KEY_P
+      
+
+      ALT_L-CTRL_R-A: SUPER_L-KEY_A
+      ALT_L-CTRL_R-S: SUPER_L-KEY_S
+      ALT_L-CTRL_R-D: SUPER_L-KEY_D
+      ALT_L-CTRL_R-F: SUPER_L-KEY_F
+      ALT_L-CTRL_R-G: SUPER_L-TAB
+      ALT_L-CTRL_R-H: SUPER_L-KEY_H
+      ALT_L-CTRL_R-J: CTRL_L-SUPER_L-KEY_J
+      ALT_L-CTRL_R-K: CTRL_L-SUPER_L-KEY_K
+      ALT_L-CTRL_R-L: CTRL_L-SUPER_L-KEY_L
+      ALT_L-CTRL_R-KEY_SPACE: CTRL_L-SUPER_L-KEY_SPACE
+
+      ALT_L-CTRL_R-Z: SUPER_L-KEY_Z
+      ALT_L-CTRL_R-V: SUPER_L-KEY_C
+
+      ALT_L-CTRL_R-M: SUPER_L-KEY_M
+      
+      ALT_L-CTRL_R-KEY_U: CTRL_L-KEY_PAGEUP
+      ALT_L-CTRL_R-KEY_I: CTRL_L-KEY_PAGEDOWN
+      
+      
+      ALT_L-CTRL_R-KEY_COMMA: SUPER_L-SHIFT_L-KEY_COMMA
+

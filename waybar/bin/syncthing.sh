@@ -7,4 +7,4 @@ else
 	icon=" "
 fi
 
-echo -n "{\"text\": \"$icon\"}"
+echo -n "{\"text\": \" $icon\"}"

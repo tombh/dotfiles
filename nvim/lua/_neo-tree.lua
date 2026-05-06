@@ -14,6 +14,20 @@ require("neo-tree").setup({
 			visible = true, -- when true, they will just be displayed differently than normal items
 			hide_hidden = false,
 		},
+		window = {
+			width = 30,
+			mappings = {
+				["ga"] = "git_add_file",
+			}
+		},
+		commands = {
+			git_add_file = function(state)
+				local node = state.tree:get_node()
+				local path = node:get_id()
+				vim.fn.system({ "git", "add", path })
+				require("neo-tree.sources.manager").refresh(state.name)
+			end,
+		}
 	},
 	window = {
 		width = 30,

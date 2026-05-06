@@ -2,17 +2,24 @@ if status is-interactive
 		fish_add_path ~/.cargo/bin
 		fish_add_path ~/bin
 		set --universal fish_greeting ""
+		set --global fish_key_bindings fish_default_key_bindings
 
 		export FZF_DEFAULT_COMMAND="fd . $HOME /publicish"
 		export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 		fzf --fish | FZF_ALT_C_COMMAND= source
 		
 		starship init fish | source
-		atuin init fish | source
+
+		# Cached to conf.d/atuin.fish.
+		# Waiting for: https://github.com/atuinsh/atuin/issues/2718
+		# atuin init fish | source
+		. ~/.config/fish/atuin.fish
 		
 		. ~/.nix-profile/etc/profile.d/nix.fish
-		~/.local/bin/mise activate fish | source
-		eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+		mise activate fish | source
+		if test -e "/home/linuxbrew/.linuxbrew/bin/brew"
+		  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    end
 
 		set --global --export WAYLAND_DISPLAY wayland-1
 		set --global --export GTK_THEME "Adwaita:dark"
@@ -53,8 +60,10 @@ if status is-interactive
 		alias lad='la --sort time'
 		alias las='la --sort size'
 		alias less='less -r'
+		alias y='WAYLAND_DISPLAY="" DISPLAY="" XDG_SESSION_TYPE="" YAZI_IMAGE_BACKEND=chafa yazi'
 
 		if test (tty) = /dev/tty1; or test (tty) = /dev/tty2;
+			set --erase WAYLAND_DISPLAY # Because you can't start `wayfire` with this already set
 			pushd ~/.config/tmux/resurrect
 				ln -sf "$(ls -Art | tail -n3 | head -n1)" last
 			popd

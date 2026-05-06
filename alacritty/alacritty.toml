@@ -79,7 +79,7 @@ semantic_escape_chars = ",│`|:\"' ()[]{}<>"
 
 [window]
 decorations = "none"
-opacity = 0.3
+opacity = 1.0
 
 [window.padding]
 x = 0

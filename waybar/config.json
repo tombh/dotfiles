@@ -5,10 +5,10 @@
 	"//width": 1908,
 	"modules-left": [
 		"wlr/taskbar",
-		"network",
-		"custom/syncthing",
+		"custom/weather",
 		"custom/vpn",
-		"custom/weather"
+		"custom/syncthing",
+		"network"
 	],
 	"modules-center": [],
 	"modules-right": [
@@ -41,13 +41,7 @@
 		},
 		"format": "{icon}{capacity}%",
 		"format-discharging": "{icon}{capacity}%",
-		"format-icons": [
-			" ",
-			" ",
-			" ",
-			" ",
-			" "
-		],
+		"format-icons": [" ", " ", " ", " ", " "],
 		"tooltip": true
 	},
 	"clock#time": {
@@ -86,14 +80,9 @@
 	},
 	"network": {
 		"interval": 5,
-		"interface": "wlp1s0f0",
-		"format-wifi": " {signalStrength}% \"{essid}\"",
-		"format-ethernet": "  {ipaddr}",
 		"format-disconnected": "⚠ Disconnected",
-		"tooltip-format": "{ifname}\n  {bandwidthUpBytes}\n  {bandwidthDownBytes}",
-		"tooltip-format-wifi": "{ifname}\n  {bandwidthUpBytes}\n  {bandwidthDownBytes}\nFrequency: {frequency}",
-		"tooltip-format-disconnected": "N/a",
-		"//tooltip-format": "{ifname}: {ipaddr}"
+		"format-ethernet": "  {ipaddr} ↑{bandwidthUpBytes} ↓{bandwidthDownBytes}",
+		"format-wifi": " {signalStrength}% \"{essid}\" ↑{bandwidthUpBytes} ↓{bandwidthDownBytes}"
 	},
 	"pulseaudio": {
 		"format": "{icon} {volume}%",
@@ -106,10 +95,7 @@
 			"phone": "",
 			"portable": "",
 			"car": "",
-			"default": [
-				"",
-				""
-			]
+			"default": ["", ""]
 		},
 		"scroll-step": 1,
 		"on-click": "pavucontrol"
@@ -120,13 +106,7 @@
 		"critical-threshold": 80,
 		"interval": 5,
 		"format": "{icon}{temperatureC}°C",
-		"format-icons": [
-			"",
-			"",
-			"",
-			"",
-			""
-		],
+		"format-icons": ["", "", "", "", ""],
 		"tooltip": true
 	},
 	"tray": {

@@ -1,11 +1,7 @@
-require("_rocks")
-
--- local tmp = vim.g.rocks_nvim
--- tmp._log_level = vim.log.levels.DEBUG
--- vim.g.rocks_nvim = tmp
-
+require("_plugins")
 require("_utils")
 require("_colours")
+require("_options")
 
 require("_keymaps")
 require("_neo-tree")
@@ -15,7 +11,6 @@ require("_noice")
 require("_gitsigns")
 require("_blink")
 require("_status_line")
-require("_options")
 require("_formatting")
 require("_scrollbar")
 require("_telescope")
@@ -29,5 +24,11 @@ require('local-highlight').setup({
 	},
 })
 require('nvim-autopairs').setup()
+require("arborist").setup({
+	install_popular = false,
+	ensure_installed = {
+		"rust"
+	}
+})
+
 vim.cmd.packadd("novim-mode")
--- vim.lsp.set_log_level("debug")

@@ -140,7 +140,7 @@ set -gF  status-style "fg=#{@theme-status-fg},bg=#{@theme-status-bg}"
 set -gwF clock-mode-colour "#{@theme-clock-mode-colour}"
 set -gwF clock-mode-style "#{@theme-clock-mode-style}"
 set -gwF mode-style "fg=#{@theme-mode-fg},bg=#{@theme-mode-bg}"
-set -gwF pane-active-border-style "fg=#{@theme-pane-active-border-fg},bg=#{@theme-pane-active-border-bg}"
+set -gwF pane-active-border-style "fg=#{@theme-pane-active-border-fg},bg=terminal"
 set -gwF pane-border-style "fg=#{@theme-pane-border-fg},bg=#{@theme-pane-border-bg}"
 set -gwF window-status-activity-style "fg=#{@theme-window-status-activity-fg},bg=#{@theme-window-status-activity-bg}"
 set -gwF window-status-current-format "#{@theme-window-status-current-format}"
@@ -149,5 +149,4 @@ set -gwF window-status-format "#{@theme-window-status-format}"
 set -gwF window-status-separator "#{@theme-window-status-separator}"
 
 set -g window-style 'bg=#{@inactive-colour}'
-set -g window-active-style 'bg=#{@active-colour}'
-
+set -g window-active-style 'bg=terminal'

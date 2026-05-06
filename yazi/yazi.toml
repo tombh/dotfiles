@@ -1,0 +1,16 @@
+[mgr]
+show_hidden = true
+sort_by = 'mtime'
+sort_reverse = true
+linemode = "size_and_mtime"
+
+[opener]
+play = [
+	{ run = 'WAYLAND_DISPLAY=wayland-1 mpv --loop "$@"', block = false, desc = "mpv" },
+]
+
+[open]
+rules = [
+	{ url = "*.mp4", use = "play" },
+	{ mime = "video/*", use = "play" },
+]

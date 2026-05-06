@@ -2,3 +2,8 @@ nvim/plugin/
 history.txt
 history.sqlite3
 waybar/bin/state
+
+fish_variables
+fish_variables.sync*
+
+yazi/plugins

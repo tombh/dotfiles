@@ -9,9 +9,11 @@ ATUIN_DB_PATH=~/.local/share/atuin
 DOTISH_PATH=/publicish/syncable
 SYNCMISC_PATH=/home/tombh/Syncthing/SyncMisc
 
-if [ "$HOSTNAME" == remote-box ]; then
-	DOTISH_PATH=/home/tombh/storage/Syncthing/Dotish
-	SYNCMISC_PATH=/home/tombh/storage/Syncthing/SyncMisc
+REMOTE_NAME=remote
+
+if [ "$HOSTNAME" == "$REMOTE_NAME" ]; then
+	DOTISH_PATH=/home/tombh/Syncthing/Dotish
+	SYNCMISC_PATH=/home/tombh/Syncthing/SyncMisc
 fi
 
 function update_symlink {
@@ -26,6 +28,7 @@ mkdir -p \
 	~/.config/tmux \
 	~/.config/broot \
 	~/.config/tmux \
+	~/.config/ghostty \
 	~/.config/htop \
 	~/.config/gitui \
 	~/.config/nix \
@@ -56,8 +59,11 @@ update_symlink bottom ~/.config/
 update_symlink gitui.ron ~/.config/gitui/theme.ron
 update_symlink nix.conf ~/.config/nix
 update_symlink zellij ~/.config/
+update_symlink fish ~/.config/
+update_symlink ghostty.ini ~/.config/ghostty/config
+update_symlink yazi ~/.config/
 
-if [ "$HOSTNAME" != remote-box ]; then
+if [ "$HOSTNAME" != "$REMOTE_NAME" ]; then
 	ln -sf /publicish/SourceCodeProNerd ~/.local/share/fonts
 	update_symlink alacritty ~/.config/
 	update_symlink wayfire.ini ~/.config/
@@ -69,7 +75,7 @@ fi
 if [ "$USER" == "tombh" ]; then
 	update_symlink starship.toml ~/.config/
 
-	if [ "$HOSTNAME" == remote-box ]; then
+	if [ "$HOSTNAME" == "$REMOTE_NAME" ]; then
 		ln -sf "$DOTISH_PATH"/tbx/tbx ~/bin/tbx
 		ln -sf "$SYNCMISC_PATH"/config/atuin/remote-db "$ATUIN_DB_PATH"
 	else

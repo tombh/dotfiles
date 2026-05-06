@@ -3,6 +3,10 @@ require("telescope").setup({
 		mappings = {
 			i = {
 				["<Esc>"] = require("telescope.actions").close,
+				["<C-v>"] = function()
+					local clip = vim.fn.getreg("+")
+					vim.api.nvim_put({ clip }, "c", true, true)
+				end,
 			},
 		},
 	},

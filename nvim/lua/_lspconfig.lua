@@ -172,6 +172,10 @@ local function on_attach(client, bufnr)
 		client.server_capabilities.documentFormattingProvider = true
 	end
 
+	-- Hack to get around bug in May 2026. Didn't explore it deeply cos I don't think I use semantic
+	-- tokens much?
+	client.server_capabilities.semanticTokensProvider = nil
+
 	_G.keymap("<M-a>", vim.lsp.buf.code_action)
 	_G.keymap("<M-e>", vim.diagnostic.open_float)
 	_G.keymap("<M-R>", vim.lsp.buf.rename)
